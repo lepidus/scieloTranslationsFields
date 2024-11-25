@@ -61,7 +61,7 @@ describe('SciELO Translations Fields - Relations field features', function () {
 		}
 	});
 
-    it('Relations field is not shown at submission wizard', function() {
+    it('Relations fields are not shown at submission wizard', function() {
         cy.login('ckwantes', null, 'publicknowledge');
 
         cy.findSubmission('myQueue', submissionData.title);
@@ -80,6 +80,7 @@ describe('SciELO Translations Fields - Relations field features', function () {
         cy.contains('button', 'Continue').click();
 
         cy.wait(1000);
+        cy.contains('h3', 'Relation status').should('not.exist');
         cy.contains('button', 'Submit').click();
         cy.get('.modal__panel:visible').within(() => {
             cy.contains('button', 'Submit').click();
