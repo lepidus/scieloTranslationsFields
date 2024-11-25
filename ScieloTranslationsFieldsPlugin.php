@@ -45,5 +45,5 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
 }
 
 if (!PKP_STRICT_MODE) {
-    class_alias('\APP\plugins\generic\scieloTranslationsFields\ScieloTranslationsFields', '\ScieloTranslationsFields');
+    class_alias('\APP\plugins\generic\scieloTranslationsFields\ScieloTranslationsFieldsPlugin', '\ScieloTranslationsFieldsPlugin');
 }
