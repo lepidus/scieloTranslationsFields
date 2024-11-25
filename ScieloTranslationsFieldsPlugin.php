@@ -27,8 +27,9 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
             return true;
         }
 
-        // if ($success && $this->getEnabled($mainContextId)) {
-        // }
+        if ($success && $this->getEnabled($mainContextId)) {
+            Hook::add('TemplateManager::display', [$this, 'removeRelationsFromEditorsStep']);
+        }
 
         return $success;
     }
@@ -41,6 +42,35 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
     public function getDescription()
     {
         return __('plugins.generic.scieloTranslationsFields.description');
+    }
+
+    public function removeRelationsFromEditorsStep($hookName, $params)
+    {
+        $request = Application::get()->getRequest();
+        $templateMgr = $params[0];
+
+        if ($request->getRequestedPage() !== 'submission' || $request->getRequestedOp() === 'saved') {
+            return Hook::CONTINUE;
+        }
+
+        $steps = $templateMgr->getState('steps');
+        $editedSteps = [];
+
+        foreach ($steps as $step) {
+            if ($step['id'] === 'editors') {
+                $editedSections = [];
+                foreach ($step['sections'] as $section) {
+                    if ($section['id'] != 'relation') {
+                        $editedSections[] = $section;
+                    }
+                }
+                $step['sections'] = $editedSections;
+            }
+            $editedSteps[] = $step;
+        }
+
+        $templateMgr->setState(['steps' => $editedSteps]);
+        return Hook::CONTINUE;
     }
 }
 
