@@ -11,8 +11,8 @@ msgstr ""
 "PO-Revision-Date: 2020-12-16T08:00:00+02:00\n"
 "Language: Español\n"
 
-msgid "plugins.generic.scieloTranslationsSubmissionsFields.displayName"
-msgstr "Campos de envío de SciELO Traducciones"
+msgid "plugins.generic.scieloTranslationsFields.displayName"
+msgstr "Campos de SciELO Traducciones"
 
-msgid "plugins.generic.scieloTranslationsSubmissionsFields.description"
+msgid "plugins.generic.scieloTranslationsFields.description"
 msgstr "Realiza cambios en los campos de envío para su uso en SciELO Traducciones"

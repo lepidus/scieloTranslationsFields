@@ -11,8 +11,8 @@ msgstr ""
 "PO-Revision-Date: 2020-12-16T08:00:00+02:00\n"
 "Language: English\n"
 
-msgid "plugins.generic.scieloTranslationsSubmissionsFields.displayName"
-msgstr "SciELO Translations Submissions Fields"
+msgid "plugins.generic.scieloTranslationsFields.displayName"
+msgstr "SciELO Translations Fields"
 
-msgid "plugins.generic.scieloTranslationsSubmissionsFields.description"
+msgid "plugins.generic.scieloTranslationsFields.description"
 msgstr "Makes changes to submission fields for use in SciELO Translations"

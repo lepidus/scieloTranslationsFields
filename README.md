@@ -1,4 +1,4 @@
-# SciELO Translations Submissions Fields
+# SciELO Translations Fields
 
 This plugin adds/removes some submissions fields from OPS, in order to suit the needs of SciELO Translations.
 

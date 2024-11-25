@@ -1,5 +1,5 @@
 variables:
-  PLUGIN_NAME: 'scieloTranslationsSubmissionsFields'
+  PLUGIN_NAME: 'scieloTranslationsFields'
 
 include:
   - project: 'documentacao-e-tarefas/modelosparaintegracaocontinua'
