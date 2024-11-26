@@ -29,6 +29,7 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
 
         if ($success && $this->getEnabled($mainContextId)) {
             Hook::add('TemplateManager::display', [$this, 'removeRelationsFromEditorsStep']);
+            Hook::add('Template::Workflow', [$this, 'removeRelationsFromWorkflow']);
         }
 
         return $success;
@@ -70,16 +71,42 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         }
 
         $templateMgr->setState(['steps' => $editedSteps]);
-        $templateMgr->registerFilter("output", [$this, 'removeRelationsFromReviewStep']);
+        $templateMgr->registerFilter("output", [$this, 'removeRelationsFromReviewStepFilter']);
 
         return Hook::CONTINUE;
     }
 
-    public function removeRelationsFromReviewStep($output, $templateMgr)
+    public function removeRelationsFromReviewStepFilter($output, $templateMgr)
     {
         if (str_contains($output, '<h3 id="review-relation">')) {
             $output = '';
-            $templateMgr->unregisterFilter("output", [$this, 'removeRelationsFromReviewStep']);
+            $templateMgr->unregisterFilter("output", [$this, 'removeRelationsFromReviewStepFilter']);
+        }
+
+        return $output;
+    }
+
+    public function removeRelationsFromWorkflow($hookName, $params)
+    {
+        $templateMgr = &$params[1];
+        $templateMgr->registerFilter("output", [$this, 'removeRelationsButtonWorkflowFilter']);
+
+        return Hook::CONTINUE;
+    }
+
+    public function removeRelationsButtonWorkflowFilter($output, $templateMgr)
+    {
+        if (
+            preg_match('/class="pkpWorkflow__header"/', $output)
+            && preg_match('/<span[^>]+class="pkpPublication__relation"/', $output, $matches, PREG_OFFSET_CAPTURE)
+        ) {
+            $blockStartPosition = $matches[0][1];
+
+            preg_match('/<\/span>/', $output, $matches, PREG_OFFSET_CAPTURE, $blockStartPosition);
+            $blockEndPosition = $matches[0][1] + strlen('</span>');
+
+            $output = substr_replace($output, '', $blockStartPosition, $blockEndPosition - $blockStartPosition);
+            $templateMgr->unregisterFilter('output', array($this, 'removeRelationsButtonWorkflowFilter'));
         }
 
         return $output;
