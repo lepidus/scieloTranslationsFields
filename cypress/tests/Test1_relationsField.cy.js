@@ -70,8 +70,7 @@ describe('SciELO Translations Fields - Relations field features', function () {
         cy.addSubmissionGalleys(submissionData.files);
         cy.contains('button', 'Continue').click();
         contributorsStep(submissionData);
-        cy.contains('button', 'Continue').click();
-
+        
         cy.contains('h2', 'Relation status').should('not.exist');
         cy.contains('legend', 'Relation status').should('not.exist');
         cy.contains('button', 'Continue').click();
