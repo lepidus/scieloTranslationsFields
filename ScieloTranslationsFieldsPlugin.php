@@ -70,7 +70,19 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         }
 
         $templateMgr->setState(['steps' => $editedSteps]);
+        $templateMgr->registerFilter("output", [$this, 'removeRelationsFromReviewStep']);
+
         return Hook::CONTINUE;
+    }
+
+    public function removeRelationsFromReviewStep($output, $templateMgr)
+    {
+        if (str_contains($output, '<h3 id="review-relation">')) {
+            $output = '';
+            $templateMgr->unregisterFilter("output", [$this, 'removeRelationsFromReviewStep']);
+        }
+
+        return $output;
     }
 }
 
