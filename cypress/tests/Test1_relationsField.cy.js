@@ -63,11 +63,8 @@ describe('SciELO Translations Fields - Relations field features', function () {
 
     it('Relations fields are not shown at submission wizard', function() {
         cy.login('ckwantes', null, 'publicknowledge');
-
-        cy.findSubmission('myQueue', submissionData.title);
-        cy.contains('button', 'Continue').click();
-
         cy.get('div#myQueue a:contains("New Submission")').click();
+
         beginSubmission(submissionData);
         detailsStep(submissionData);
         cy.addSubmissionGalleys(submissionData.files);
@@ -87,5 +84,12 @@ describe('SciELO Translations Fields - Relations field features', function () {
         });
         cy.waitJQuery();
         cy.contains('h1', 'Submission complete');
+    });
+    it('Relations button is not shown in Workflow page', function () {
+        cy.login('ckwantes', null, 'publicknowledge');
+        cy.findSubmission('myQueue', submissionData.title);
+
+        cy.get('#publication-button').click();
+        cy.contains('button', 'Relations').should('not.exist');
     });
 });
