@@ -81,6 +81,10 @@ describe('SciELO Translations Fields - Original DOI features', function () {
         cy.contains('button', 'Continue').click();
 
         cy.wait(1000);
+        cy.contains('h3', 'Translation data');
+        cy.contains('h4', 'DOI of the original document');
+        cy.contains(submissionData.originalDoi);
+
         cy.contains('button', 'Submit').click();
         cy.get('.modal__panel:visible').within(() => {
             cy.contains('button', 'Submit').click();
