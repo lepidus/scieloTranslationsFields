@@ -31,7 +31,8 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         }
 
         if ($success && $this->getEnabled($mainContextId)) {
-            Hook::add('TemplateManager::display', [$this, 'modifySubmissionEditorsStep']);
+            Hook::add('TemplateManager::display', [$this, 'modifySubmissionWizardSteps']);
+            Hook::add('Template::SubmissionWizard::Section::Review', [$this, 'addFieldsToReviewStep']);
             Hook::add('Template::Workflow', [$this, 'removeRelationsFromWorkflow']);
             Hook::add('Dispatcher::dispatch', [$this, 'setupTranslationsFieldsHandler']);
             Hook::add('Schema::get::submission', [$this, 'addOurFieldsToSubmissionSchema']);
@@ -63,7 +64,7 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         return Hook::CONTINUE;
     }
 
-    public function modifySubmissionEditorsStep($hookName, $params)
+    public function modifySubmissionWizardSteps($hookName, $params)
     {
         $request = Application::get()->getRequest();
         $templateMgr = $params[0];
@@ -140,6 +141,19 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         }
 
         return $output;
+    }
+
+    public function addFieldsToReviewStep($hookName, $params)
+    {
+        $step = $params[0]['step'];
+        $templateMgr = $params[1];
+        $output = &$params[2];
+
+        if ($step === 'details') {
+            $output .= $templateMgr->fetch($this->getTemplateResource('review/translationDataFields.tpl'));
+        }
+
+        return Hook::CONTINUE;
     }
 
     public function removeRelationsFromWorkflow($hookName, $params)
