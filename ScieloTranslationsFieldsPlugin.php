@@ -18,6 +18,7 @@ use PKP\plugins\Hook;
 use PKP\plugins\GenericPlugin;
 use APP\core\Application;
 use APP\pages\submission\SubmissionHandler;
+use APP\plugins\generic\scieloTranslationsFields\api\v1\translationsFields\TranslationsFieldsHandler;
 use APP\plugins\generic\scieloTranslationsFields\classes\components\forms\TranslationDataForm;
 
 class ScieloTranslationsFieldsPlugin extends GenericPlugin
@@ -32,6 +33,8 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         if ($success && $this->getEnabled($mainContextId)) {
             Hook::add('TemplateManager::display', [$this, 'modifySubmissionEditorsStep']);
             Hook::add('Template::Workflow', [$this, 'removeRelationsFromWorkflow']);
+            Hook::add('Dispatcher::dispatch', [$this, 'setupTranslationsFieldsHandler']);
+            Hook::add('Schema::get::submission', [$this, 'addOurFieldsToSubmissionSchema']);
         }
 
         return $success;
@@ -45,6 +48,19 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
     public function getDescription()
     {
         return __('plugins.generic.scieloTranslationsFields.description');
+    }
+
+    public function addOurFieldsToSubmissionSchema($hookName, $params)
+    {
+        $schema = &$params[0];
+
+        $schema->properties->{'isTranslationOfDoi'} = (object) [
+            'type' => 'string',
+            'apiSummary' => true,
+            'validation' => ['nullable'],
+        ];
+
+        return Hook::CONTINUE;
     }
 
     public function modifySubmissionEditorsStep($hookName, $params)
@@ -74,7 +90,7 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
             }
 
             if ($step['id'] === 'details') {
-                $step['sections'] = $this->addTranslationDataSection($step['sections'], $submission);
+                $step['sections'] = $this->addTranslationDataSection($step['sections'], $submission, $request);
             }
 
             $editedSteps[] = $step;
@@ -97,9 +113,12 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         return $editedSections;
     }
 
-    private function addTranslationDataSection($stepSections, $submission)
+    private function addTranslationDataSection($stepSections, $submission, $request)
     {
-        $translationFieldsApiUrl = ' ';
+        $context = $request->getContext();
+        $translationFieldsApiUrl = $request
+            ->getDispatcher()
+            ->url($request, Application::ROUTE_API, $context->getPath(), "translationsFields/saveTranslationFields", null, null, ['submissionId' => $submission->getId()]);
         $translationDataForm = new TranslationDataForm($translationFieldsApiUrl, $submission);
 
         $stepSections[] = [
@@ -147,6 +166,28 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         }
 
         return $output;
+    }
+
+    public function setupTranslationsFieldsHandler($hookName, $params)
+    {
+        $request = $params[0];
+        $router = $request->getRouter();
+
+        if (!($router instanceof \PKP\core\APIRouter)) {
+            return;
+        }
+
+        if (str_contains($request->getRequestPath(), 'api/v1/translationsFields')) {
+            $handler = new TranslationsFieldsHandler();
+        }
+
+        if (!isset($handler)) {
+            return;
+        }
+
+        $router->setHandler($handler);
+        $handler->getApp()->run();
+        exit;
     }
 }
 
