@@ -17,14 +17,14 @@ msgstr "SciELO Translations Fields"
 msgid "plugins.generic.scieloTranslationsFields.description"
 msgstr "Makes changes to submission fields for use in SciELO Translations"
 
-msgid "plugins.generic.scieloTranslationsFields.translationInformation.title"
-msgstr "Translation information"
+msgid "plugins.generic.scieloTranslationsFields.translationData.title"
+msgstr "Translation data"
 
-msgid "plugins.generic.scieloTranslationsFields.translationInformation.description"
-msgstr "Please provide the following information regarding the translation you are submitting."
+msgid "plugins.generic.scieloTranslationsFields.translationData.description"
+msgstr "Please provide the following data regarding the translation you are submitting."
 
-msgid "plugins.generic.scieloTranslationsFields.originalDoi"
-msgstr "Original DOI"
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi"
+msgstr "DOI of the original document"
 
-msgid "plugins.generic.scieloTranslationsFields.originalDoi.description"
-msgstr "The original DOI of the document this submission is translating"
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi.description"
+msgstr "The DOI of the original document this submission is translating"

@@ -18,7 +18,7 @@ use PKP\plugins\Hook;
 use PKP\plugins\GenericPlugin;
 use APP\core\Application;
 use APP\pages\submission\SubmissionHandler;
-use APP\plugins\generic\scieloTranslationsFields\classes\components\forms\TranslationInformationForm;
+use APP\plugins\generic\scieloTranslationsFields\classes\components\forms\TranslationDataForm;
 
 class ScieloTranslationsFieldsPlugin extends GenericPlugin
 {
@@ -65,31 +65,18 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
             return Hook::CONTINUE;
         }
 
-        $translationFieldsApiUrl = ' ';
-        $translationInformationForm = new TranslationInformationForm($translationFieldsApiUrl, $submission);
-
         $steps = $templateMgr->getState('steps');
         $editedSteps = [];
 
         foreach ($steps as $step) {
             if ($step['id'] === 'editors') {
-                $editedSections = [];
-                foreach ($step['sections'] as $section) {
-                    if ($section['id'] != 'relation') {
-                        $editedSections[] = $section;
-                    }
-                }
-
-                $editedSections[] = [
-                    'id' => 'translationInformation',
-                    'name' => __('plugins.generic.scieloTranslationsFields.translationInformation.title'),
-                    'description' => __('plugins.generic.scieloTranslationsFields.translationInformation.description'),
-                    'type' => SubmissionHandler::SECTION_TYPE_FORM,
-                    'form' => $translationInformationForm->getConfig(),
-                ];
-
-                $step['sections'] = $editedSections;
+                $step['sections'] = $this->removeRelationsSection($step['sections']);
             }
+
+            if ($step['id'] === 'details') {
+                $step['sections'] = $this->addTranslationDataSection($step['sections'], $submission);
+            }
+
             $editedSteps[] = $step;
         }
 
@@ -97,6 +84,33 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         $templateMgr->registerFilter("output", [$this, 'removeRelationsFromReviewStepFilter']);
 
         return Hook::CONTINUE;
+    }
+
+    private function removeRelationsSection($stepSections)
+    {
+        $editedSections = [];
+        foreach ($stepSections as $section) {
+            if ($section['id'] != 'relation') {
+                $editedSections[] = $section;
+            }
+        }
+        return $editedSections;
+    }
+
+    private function addTranslationDataSection($stepSections, $submission)
+    {
+        $translationFieldsApiUrl = ' ';
+        $translationDataForm = new TranslationDataForm($translationFieldsApiUrl, $submission);
+
+        $stepSections[] = [
+            'id' => 'translationData',
+            'name' => __('plugins.generic.scieloTranslationsFields.translationData.title'),
+            'description' => __('plugins.generic.scieloTranslationsFields.translationData.description'),
+            'type' => SubmissionHandler::SECTION_TYPE_FORM,
+            'form' => $translationDataForm->getConfig(),
+        ];
+
+        return $stepSections;
     }
 
     public function removeRelationsFromReviewStepFilter($output, $templateMgr)

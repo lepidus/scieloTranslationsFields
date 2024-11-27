@@ -67,17 +67,17 @@ describe('SciELO Translations Fields - Original DOI features', function () {
         cy.get('div#myQueue a:contains("New Submission")').click();
 
         beginSubmission(submissionData);
+
+        cy.contains('h2', 'Translation data');
+        cy.contains('Please provide the following data regarding the translation you are submitting.')
+        cy.contains('label', 'DOI of the original document');
+        cy.contains('The DOI of the original document this submission is translating');
+        cy.get('input[name="originalDocumentDoi"]').type(submissionData.originalDoi, {delay: 0});
+        
         detailsStep(submissionData);
         cy.addSubmissionGalleys(submissionData.files);
         cy.contains('button', 'Continue').click();
         contributorsStep(submissionData);
-        
-        cy.contains('h2', 'Translation information');
-        cy.contains('Please provide the following information regarding the translation you are submitting.')
-        cy.contains('label', 'Original DOI');
-        cy.contains('The original DOI of the document this submission is translating');
-        
-        cy.get('#originalDoi-control-en').type(submissionData.originalDoi, {delay: 0});
         cy.contains('button', 'Continue').click();
 
         cy.wait(1000);
