@@ -17,6 +17,8 @@ namespace APP\plugins\generic\scieloTranslationsFields;
 use PKP\plugins\Hook;
 use PKP\plugins\GenericPlugin;
 use APP\core\Application;
+use APP\pages\submission\SubmissionHandler;
+use APP\plugins\generic\scieloTranslationsFields\classes\components\forms\TranslationInformationForm;
 
 class ScieloTranslationsFieldsPlugin extends GenericPlugin
 {
@@ -28,7 +30,7 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         }
 
         if ($success && $this->getEnabled($mainContextId)) {
-            Hook::add('TemplateManager::display', [$this, 'removeRelationsFromEditorsStep']);
+            Hook::add('TemplateManager::display', [$this, 'modifySubmissionEditorsStep']);
             Hook::add('Template::Workflow', [$this, 'removeRelationsFromWorkflow']);
         }
 
@@ -45,7 +47,7 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         return __('plugins.generic.scieloTranslationsFields.description');
     }
 
-    public function removeRelationsFromEditorsStep($hookName, $params)
+    public function modifySubmissionEditorsStep($hookName, $params)
     {
         $request = Application::get()->getRequest();
         $templateMgr = $params[0];
@@ -53,6 +55,18 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         if ($request->getRequestedPage() !== 'submission' || $request->getRequestedOp() === 'saved') {
             return Hook::CONTINUE;
         }
+
+        $submission = $request
+            ->getRouter()
+            ->getHandler()
+            ->getAuthorizedContextObject(Application::ASSOC_TYPE_SUBMISSION);
+
+        if (!$submission || !$submission->getData('submissionProgress')) {
+            return Hook::CONTINUE;
+        }
+
+        $translationFieldsApiUrl = ' ';
+        $translationInformationForm = new TranslationInformationForm($translationFieldsApiUrl, $submission);
 
         $steps = $templateMgr->getState('steps');
         $editedSteps = [];
@@ -65,6 +79,15 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
                         $editedSections[] = $section;
                     }
                 }
+
+                $editedSections[] = [
+                    'id' => 'translationInformation',
+                    'name' => __('plugins.generic.scieloTranslationsFields.translationInformation.title'),
+                    'description' => __('plugins.generic.scieloTranslationsFields.translationInformation.description'),
+                    'type' => SubmissionHandler::SECTION_TYPE_FORM,
+                    'form' => $translationInformationForm->getConfig(),
+                ];
+
                 $step['sections'] = $editedSections;
             }
             $editedSteps[] = $step;
