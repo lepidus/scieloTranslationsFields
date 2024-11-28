@@ -16,6 +16,7 @@ function detailsStep(submissionData) {
         cy.wait(500);
         cy.get('#titleAbstract-keywords-control-en').type('{enter}', {delay: 0});
     });
+    cy.get('input[name="originalDocumentHasDoi"][value="0"]').check();
     cy.contains('button', 'Continue').click();
 }
 
