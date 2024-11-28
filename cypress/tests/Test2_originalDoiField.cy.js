@@ -105,4 +105,16 @@ describe('SciELO Translations Fields - Original DOI features', function () {
         cy.waitJQuery();
         cy.contains('h1', 'Submission complete');
     });
+    it('Relations button is not shown in Workflow page', function () {
+        cy.login('ckwantes', null, 'publicknowledge');
+        cy.findSubmission('myQueue', submissionData.title);
+
+        cy.get('#publication-button').click();
+        cy.get('#translationData-button').click();
+
+        cy.contains('Original document has DOI');
+        cy.get('input[name="originalDocumentHasDoi"][value="1"]').should('be.checked');
+        cy.contains('DOI of the original document')
+        cy.contains(submissionData.originalDoi);
+    });
 });
