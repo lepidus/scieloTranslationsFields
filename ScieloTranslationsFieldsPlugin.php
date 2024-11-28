@@ -34,6 +34,8 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
             Hook::add('Template::SubmissionWizard::Section::Review', [$this, 'addFieldsToReviewStep']);
             Hook::add('Submission::validateSubmit', [$this, 'validateSubmissionFields']);
             Hook::add('Template::Workflow', [$this, 'removeRelationsFromWorkflow']);
+            Hook::add('TemplateManager::display', [$this, 'addResourcesToWorkflow']);
+            Hook::add('Template::Workflow::Publication', [$this, 'addTranslationDataTabToWorkflow']);
             Hook::add('Schema::get::publication', [$this, 'addOurFieldsToPublicationSchema']);
         }
 
@@ -118,14 +120,19 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         return $editedSections;
     }
 
-    private function addTranslationDataSection($stepSections, $submission, $request)
+    private function getTranslationDataForm($submission, $request)
     {
         $context = $request->getContext();
         $publication = $submission->getLatestPublication();
         $publicationEndpoint = 'submissions/' . $submission->getId() . '/publications/' . $publication->getId();
         $saveFormUrl = $request->getDispatcher()->url($request, Application::ROUTE_API, $context->getPath(), $publicationEndpoint);
 
-        $translationDataForm = new TranslationDataForm($saveFormUrl, $submission);
+        return new TranslationDataForm($saveFormUrl, $submission);
+    }
+
+    private function addTranslationDataSection($stepSections, $submission, $request)
+    {
+        $translationDataForm = $this->getTranslationDataForm($submission, $request);
 
         $stepSections[] = [
             'id' => 'translationData',
@@ -198,6 +205,36 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         }
 
         return $output;
+    }
+
+    public function addResourcesToWorkflow($hookName, $params)
+    {
+        $templateMgr = $params[0];
+        $template = $params[1];
+        $request = Application::get()->getRequest();
+        $submission = $templateMgr->getTemplateVars('submission');
+
+        if ($template != 'workflow/workflow.tpl' && $template != 'authorDashboard/authorDashboard.tpl') {
+            return Hook::CONTINUE;
+        }
+
+        $translationDataForm = $this->getTranslationDataForm($submission, $request);
+        $components = $templateMgr->getState('components');
+        $components[$translationDataForm->id] = $translationDataForm->getConfig();
+
+        $templateMgr->setState(['components' => $components]);
+
+        return Hook::CONTINUE;
+    }
+
+    public function addTranslationDataTabToWorkflow($hookName, $params)
+    {
+        $templateMgr = &$params[1];
+        $output = &$params[2];
+
+        $output .= $templateMgr->fetch($this->getTemplateResource('translationDataTab.tpl'));
+
+        return Hook::CONTINUE;
     }
 }
 
