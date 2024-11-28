@@ -18,7 +18,6 @@ use PKP\plugins\Hook;
 use PKP\plugins\GenericPlugin;
 use APP\core\Application;
 use APP\pages\submission\SubmissionHandler;
-use APP\plugins\generic\scieloTranslationsFields\api\v1\translationsFields\TranslationsFieldsHandler;
 use APP\plugins\generic\scieloTranslationsFields\classes\components\forms\TranslationDataForm;
 
 class ScieloTranslationsFieldsPlugin extends GenericPlugin
@@ -35,7 +34,6 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
             Hook::add('Template::SubmissionWizard::Section::Review', [$this, 'addFieldsToReviewStep']);
             Hook::add('Submission::validateSubmit', [$this, 'validateSubmissionFields']);
             Hook::add('Template::Workflow', [$this, 'removeRelationsFromWorkflow']);
-            Hook::add('Dispatcher::dispatch', [$this, 'setupTranslationsFieldsHandler']);
             Hook::add('Schema::get::publication', [$this, 'addOurFieldsToPublicationSchema']);
         }
 
@@ -200,28 +198,6 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         }
 
         return $output;
-    }
-
-    public function setupTranslationsFieldsHandler($hookName, $params)
-    {
-        $request = $params[0];
-        $router = $request->getRouter();
-
-        if (!($router instanceof \PKP\core\APIRouter)) {
-            return;
-        }
-
-        if (str_contains($request->getRequestPath(), 'api/v1/translationsFields')) {
-            $handler = new TranslationsFieldsHandler();
-        }
-
-        if (!isset($handler)) {
-            return;
-        }
-
-        $router->setHandler($handler);
-        $handler->getApp()->run();
-        exit;
     }
 }
 
