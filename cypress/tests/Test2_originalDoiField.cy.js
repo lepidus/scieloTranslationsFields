@@ -72,8 +72,6 @@ describe('SciELO Translations Fields - Original DOI features', function () {
         cy.contains('Please provide the following data regarding the translation you are submitting.')
         cy.contains('legend', 'Original document has DOI');
         cy.contains('Does the original document this submission is translating have a DOI?');
-        cy.contains('label', 'DOI of the original document');
-        cy.contains('The DOI of the original document this submission is translating');
 
         detailsStep(submissionData);
         cy.addSubmissionGalleys(submissionData.files);
@@ -90,6 +88,8 @@ describe('SciELO Translations Fields - Original DOI features', function () {
 
         cy.contains('.pkpSteps__step__label', 'Details').click();
         cy.get('input[name="originalDocumentHasDoi"][value="1"]').check();
+        cy.contains('label', 'DOI of the original document');
+        cy.contains('The DOI of the original document this submission is translating');
         cy.get('input[name="originalDocumentDoi"]').type(submissionData.originalDoi, {delay: 0});
         Cypress._.times(4, () => {
             cy.contains('button', 'Continue').click();
