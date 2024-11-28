@@ -33,9 +33,10 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         if ($success && $this->getEnabled($mainContextId)) {
             Hook::add('TemplateManager::display', [$this, 'modifySubmissionWizardSteps']);
             Hook::add('Template::SubmissionWizard::Section::Review', [$this, 'addFieldsToReviewStep']);
+            Hook::add('Submission::validateSubmit', [$this, 'validateSubmissionFields']);
             Hook::add('Template::Workflow', [$this, 'removeRelationsFromWorkflow']);
             Hook::add('Dispatcher::dispatch', [$this, 'setupTranslationsFieldsHandler']);
-            Hook::add('Schema::get::submission', [$this, 'addOurFieldsToSubmissionSchema']);
+            Hook::add('Schema::get::publication', [$this, 'addOurFieldsToPublicationSchema']);
         }
 
         return $success;
@@ -51,11 +52,16 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         return __('plugins.generic.scieloTranslationsFields.description');
     }
 
-    public function addOurFieldsToSubmissionSchema($hookName, $params)
+    public function addOurFieldsToPublicationSchema($hookName, $params)
     {
         $schema = &$params[0];
 
-        $schema->properties->{'isTranslationOfDoi'} = (object) [
+        $schema->properties->{'originalDocumentHasDoi'} = (object) [
+            'type' => 'integer',
+            'apiSummary' => true,
+            'validation' => ['nullable'],
+        ];
+        $schema->properties->{'originalDocumentDoi'} = (object) [
             'type' => 'string',
             'apiSummary' => true,
             'validation' => ['nullable'],
@@ -117,10 +123,11 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
     private function addTranslationDataSection($stepSections, $submission, $request)
     {
         $context = $request->getContext();
-        $translationFieldsApiUrl = $request
-            ->getDispatcher()
-            ->url($request, Application::ROUTE_API, $context->getPath(), "translationsFields/saveTranslationFields", null, null, ['submissionId' => $submission->getId()]);
-        $translationDataForm = new TranslationDataForm($translationFieldsApiUrl, $submission);
+        $publication = $submission->getLatestPublication();
+        $publicationEndpoint = 'submissions/' . $submission->getId() . '/publications/' . $publication->getId();
+        $saveFormUrl = $request->getDispatcher()->url($request, Application::ROUTE_API, $context->getPath(), $publicationEndpoint);
+
+        $translationDataForm = new TranslationDataForm($saveFormUrl, $submission);
 
         $stepSections[] = [
             'id' => 'translationData',
@@ -151,6 +158,19 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
 
         if ($step === 'details') {
             $output .= $templateMgr->fetch($this->getTemplateResource('review/translationDataFields.tpl'));
+        }
+
+        return Hook::CONTINUE;
+    }
+
+    public function validateSubmissionFields($hookName, $params)
+    {
+        $errors = &$params[0];
+        $submission = $params[1];
+        $publication = $submission->getCurrentPublication();
+
+        if (is_null($publication->getData('originalDocumentHasDoi'))) {
+            $errors['originalDocumentHasDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required')];
         }
 
         return Hook::CONTINUE;
