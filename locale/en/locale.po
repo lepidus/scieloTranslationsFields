@@ -11,8 +11,35 @@ msgstr ""
 "PO-Revision-Date: 2020-12-16T08:00:00+02:00\n"
 "Language: English\n"
 
-msgid "plugins.generic.scieloTranslationsSubmissionsFields.displayName"
-msgstr "SciELO Translations Submissions Fields"
+msgid "plugins.generic.scieloTranslationsFields.displayName"
+msgstr "SciELO Translations Fields"
 
-msgid "plugins.generic.scieloTranslationsSubmissionsFields.description"
+msgid "plugins.generic.scieloTranslationsFields.description"
 msgstr "Makes changes to submission fields for use in SciELO Translations"
+
+msgid "plugins.generic.scieloTranslationsFields.translationData.title"
+msgstr "Translation data"
+
+msgid "plugins.generic.scieloTranslationsFields.translationData.description"
+msgstr "Please provide the following data regarding the translation you are submitting."
+
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi"
+msgstr "Original document DOI"
+
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.description"
+msgstr "Does the original document this submission is translating have a DOI?"
+
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.yes"
+msgstr "The original document has a DOI"
+
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.no"
+msgstr "The original document does not have a DOI"
+
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi"
+msgstr "DOI"
+
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi.description"
+msgstr "Please insert the DOI of the original document this submission is translating"
+
+msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required"
+msgstr "You must inform if the original document has a DOI"
