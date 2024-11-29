@@ -1,3 +1,3 @@
 <tab id="translationData" label="{translate key="plugins.generic.scieloTranslationsFields.translationData.title"}">
-    <translation-data-form v-bind="components.translationData" @set="set"></translation-data-form>
+    <pkp-form v-bind="components.translationData" @set="set"></pkp-form>
 </tab>
