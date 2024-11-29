@@ -25,11 +25,11 @@ class TranslationDataForm extends FormComponent
             'options' => [
                 [
                     'value' => 1,
-                    'label' => __('common.yes')
+                    'label' => __('plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.yes')
                 ],
                 [
                     'value' => 0,
-                    'label' => __('common.no')
+                    'label' => __('plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.no')
                 ]
             ],
         ]))

@@ -22,7 +22,12 @@
                     {translate key="plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required"}
                 </notification>
                 <template v-else>
-                    {{ publication.originalDocumentHasDoi ? __('common.yes') : __('common.no')}}
+                    <div v-if="publication.originalDocumentHasDoi">
+                        {translate key="plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.yes"}
+                    </div>
+                    <div v-else>
+                        {translate key="plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.no"}
+                    </div>
                 </template>
             </div>
         </div>

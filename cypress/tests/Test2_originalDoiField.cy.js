@@ -95,6 +95,7 @@ describe('SciELO Translations Fields - Original DOI features', function () {
             cy.contains('button', 'Continue').click();
         });
 
+        cy.contains('The original document has a DOI');
         cy.contains('h4', 'DOI');
         cy.contains(submissionData.originalDoi);
 

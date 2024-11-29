@@ -29,6 +29,12 @@ msgstr "Original document DOI"
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.description"
 msgstr "Does the original document this submission is translating have a DOI?"
 
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.yes"
+msgstr "The original document has a DOI"
+
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.no"
+msgstr "The original document does not have a DOI"
+
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi"
 msgstr "DOI"
 
