@@ -70,7 +70,7 @@ describe('SciELO Translations Fields - Original DOI features', function () {
 
         cy.contains('h2', 'Translation data');
         cy.contains('Please provide the following data regarding the translation you are submitting.')
-        cy.contains('legend', 'Original document has DOI');
+        cy.contains('legend', 'Original document DOI');
         cy.contains('Does the original document this submission is translating have a DOI?');
 
         detailsStep(submissionData);
@@ -81,21 +81,21 @@ describe('SciELO Translations Fields - Original DOI features', function () {
 
         cy.wait(1000);
         cy.contains('h3', 'Translation data');
-        cy.contains('h4', 'Original document has DOI');
-        cy.contains('h4', 'DOI of the original document').should('not.exist');
+        cy.contains('h4', 'Original document DOI');
+        cy.contains('h4', 'DOI').should('not.exist');
         cy.contains('You must inform if the original document has a DOI');
         cy.contains('button', 'Submit').should('be.disabled');
 
         cy.contains('.pkpSteps__step__label', 'Details').click();
         cy.get('input[name="originalDocumentHasDoi"][value="1"]').check();
-        cy.contains('label', 'DOI of the original document');
-        cy.contains('The DOI of the original document this submission is translating');
+        cy.contains('label', 'DOI');
+        cy.contains('Please insert the DOI of the original document this submission is translating');
         cy.get('input[name="originalDocumentDoi"]').type(submissionData.originalDoi, {delay: 0});
         Cypress._.times(4, () => {
             cy.contains('button', 'Continue').click();
         });
 
-        cy.contains('h4', 'DOI of the original document');
+        cy.contains('h4', 'DOI');
         cy.contains(submissionData.originalDoi);
 
         cy.contains('button', 'Submit').click();
@@ -112,9 +112,9 @@ describe('SciELO Translations Fields - Original DOI features', function () {
         cy.get('#publication-button').click();
         cy.get('#translationData-button').click();
 
-        cy.contains('Original document has DOI');
+        cy.contains('Original document DOI');
         cy.get('input[name="originalDocumentHasDoi"][value="1"]').should('be.checked');
-        cy.contains('DOI of the original document')
-        cy.contains(submissionData.originalDoi);
+        cy.contains('DOI')
+        cy.get('input[name="originalDocumentDoi"]').should('have.value', submissionData.originalDoi);
     });
 });

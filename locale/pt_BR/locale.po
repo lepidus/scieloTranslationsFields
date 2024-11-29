@@ -24,16 +24,16 @@ msgid "plugins.generic.scieloTranslationsFields.translationData.description"
 msgstr "Forneça os seguintes dados relativos a tradução que você está submetendo"
 
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi"
-msgstr "Documento original possui DOI"
+msgstr "DOI do documento original"
 
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.description"
 msgstr "O documento original que esta submissão está traduzindo possui DOI?"
 
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi"
-msgstr "DOI do documento original"
+msgstr "DOI"
 
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi.description"
-msgstr "O DOI do documento original que esta submissão está traduzindo"
+msgstr "Por favor, insira o DOI do documento original que esta submissão está traduzindo"
 
 msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required"
 msgstr "Você deve informar se o documento original possui um DOI"
