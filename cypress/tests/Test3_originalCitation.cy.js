@@ -43,10 +43,10 @@ describe('SciELO Translations Fields - Original document citation features', fun
 			abstract: 'Great guitar solos',
 			keywords: ['guitar'],
             originalDoi: '10.1590/0037-8682-0167-2020',
-            originalDoiCitation: 'Croda, J., Oliveira, W. K. de ., Frutuoso, R. L. ., Mandetta, L. H. ., \
-                Baia-da-Silva, D. C. ., Brito-Sousa, J. D. ., Monteiro, W. M. ., & Lacerda, M. V. G. . (2020). \
+            originalDoiCitation: 'Croda, J., Oliveira, W. K. de, Frutuoso, R. L., Mandetta, L. H., \
+                Baia-da-Silva, D. C., Brito-Sousa, J. D., Monteiro, W. M., & Lacerda, M. V. G. (2020). \
                 COVID-19 in Brazil: advantages of a socialized unified health system and preparation to contain cases. \
-                In SciELO Preprints. https://doi.org/10.1590/0037-8682-0167-2020 (Original work published 2020)',
+                Revista Da Sociedade Brasileira de Medicina Tropical, 53. https://doi.org/10.1590/0037-8682-0167-2020',
             contributors: [
                 {
                     'given': 'Jimi',
