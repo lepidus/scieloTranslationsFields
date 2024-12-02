@@ -34,7 +34,7 @@ function contributorsStep(submissionData) {
     cy.contains('button', 'Continue').click();
 }
 
-describe('SciELO Translations Fields - Citation field features', function () {
+describe('SciELO Translations Fields - Original document citation features', function () {
 	let submissionData;
 
 	before(function () {
@@ -42,8 +42,7 @@ describe('SciELO Translations Fields - Citation field features', function () {
 			title: "Voodoo Child",
 			abstract: 'Great guitar solos',
 			keywords: ['guitar'],
-            fakeOriginalDoi: '10.4567/OriginalDoiTranslated',
-            realOriginalDoi: '10.1590/0037-8682-0167-2020',
+            originalDoi: '10.1590/0037-8682-0167-2020',
             originalDoiCitation: 'Croda, J., Oliveira, W. K. de ., Frutuoso, R. L. ., Mandetta, L. H. ., \
                 Baia-da-Silva, D. C. ., Brito-Sousa, J. D. ., Monteiro, W. M. ., & Lacerda, M. V. G. . (2020). \
                 COVID-19 in Brazil: advantages of a socialized unified health system and preparation to contain cases. \
@@ -67,39 +66,27 @@ describe('SciELO Translations Fields - Citation field features', function () {
 		}
 	});
 
-    it('Citation field is fullfilled when a deposited original DOI is informed', function() {
+    it('Creates a new submission with a deposited original DOI', function() {
         cy.login('ckwantes', null, 'publicknowledge');
         cy.get('div#myQueue a:contains("New Submission")').click();
 
         beginSubmission(submissionData);
-
-        cy.contains('legend', 'Original document citation');
-        cy.contains('Descrição do campo da citação');
-
+        cy.get('input[name="originalDocumentHasDoi"][value="1"]').check();
+        cy.get('input[name="originalDocumentDoi"]').type(submissionData.originalDoi, {delay: 0});
         detailsStep(submissionData);
         cy.addSubmissionGalleys(submissionData.files);
         cy.contains('button', 'Continue').click();
         contributorsStep(submissionData);
         cy.contains('button', 'Continue').click();
-
-        cy.wait(1000);
-        cy.contains('h4', 'Original document citation');
-        cy.contains('You must inform the citation of the original document');
-        cy.contains('button', 'Submit').should('be.disabled');
-
-        cy.contains('.pkpSteps__step__label', 'Details').click();
-        cy.get('input[name="originalDocumentHasDoi"][value="1"]').check();
-        cy.get('input[name="originalDocumentDoi"]').type(submissionData.realOriginalDoi, {delay: 0});
-        cy.get('input[name="originalDocumentCitation"]').should('have.value', submissionData.originalDoiCitation);
         
-        Cypress._.times(4, () => {
-            cy.contains('button', 'Continue').click();
-        });
-
         cy.contains('The original document has a DOI');
-        cy.contains(submissionData.realOriginalDoi);
-        cy.contains(submissionData.originalDoiCitation);
+        cy.contains(submissionData.originalDoi);
 
-        cy.contains('button', 'Submit').should('be.enabled');
+        cy.contains('button', 'Submit').click();
+        cy.get('.modal__panel:visible').within(() => {
+            cy.contains('button', 'Submit').click();
+        });
+        cy.waitJQuery();
+        cy.contains('h1', 'Submission complete');
     });
 });
