@@ -89,4 +89,14 @@ describe('SciELO Translations Fields - Original document citation features', fun
         cy.waitJQuery();
         cy.contains('h1', 'Submission complete');
     });
+    it('Original document citation is shown at workflow', function () {
+        cy.login('ckwantes', null, 'publicknowledge');
+        cy.findSubmission('myQueue', submissionData.title);
+
+        cy.get('#publication-button').click();
+        cy.get('#translationData-button').click();
+
+        cy.contains('Original document citation');
+        cy.get('input[name="originalDocumentCitation"]').should('have.value', submissionData.originalDoiCitation);
+    });
 });
