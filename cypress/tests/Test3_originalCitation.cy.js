@@ -43,10 +43,7 @@ describe('SciELO Translations Fields - Original document citation features', fun
 			abstract: 'Great guitar solos',
 			keywords: ['guitar'],
             originalDoi: '10.1590/0037-8682-0167-2020',
-            originalDoiCitation: 'Croda, J., Oliveira, W. K. de, Frutuoso, R. L., Mandetta, L. H., \
-                Baia-da-Silva, D. C., Brito-Sousa, J. D., Monteiro, W. M., & Lacerda, M. V. G. (2020). \
-                COVID-19 in Brazil: advantages of a socialized unified health system and preparation to contain cases. \
-                Revista Da Sociedade Brasileira de Medicina Tropical, 53. https://doi.org/10.1590/0037-8682-0167-2020',
+            originalDoiCitationPart: 'COVID-19 in Brazil: advantages of a socialized unified health system and preparation to contain cases.',
             contributors: [
                 {
                     'given': 'Jimi',
@@ -81,7 +78,7 @@ describe('SciELO Translations Fields - Original document citation features', fun
         
         cy.contains('The original document has a DOI');
         cy.contains(submissionData.originalDoi);
-        cy.contains(submissionData.originalDoiCitation);
+        cy.contains(submissionData.originalDoiCitationPart);
 
         cy.contains('button', 'Submit').click();
         cy.get('.modal__panel:visible').within(() => {
@@ -98,6 +95,6 @@ describe('SciELO Translations Fields - Original document citation features', fun
         cy.get('#translationData-button').click();
 
         cy.contains('Original document citation');
-        cy.contains(submissionData.originalDoiCitation);
+        cy.contains(submissionData.originalDoiCitationPart);
     });
 });
