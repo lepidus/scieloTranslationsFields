@@ -18,6 +18,7 @@ use PKP\plugins\Hook;
 use PKP\plugins\GenericPlugin;
 use APP\core\Application;
 use APP\pages\submission\SubmissionHandler;
+use APP\plugins\generic\scieloTranslationsFields\api\v1\translationsFields\TranslationsFieldsHandler;
 use APP\plugins\generic\scieloTranslationsFields\classes\components\forms\TranslationDataForm;
 
 class ScieloTranslationsFieldsPlugin extends GenericPlugin
@@ -36,6 +37,7 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
             Hook::add('Template::Workflow', [$this, 'removeRelationsFromWorkflow']);
             Hook::add('TemplateManager::display', [$this, 'addResourcesToWorkflow']);
             Hook::add('Template::Workflow::Publication', [$this, 'addTranslationDataTabToWorkflow']);
+            Hook::add('Dispatcher::dispatch', [$this, 'setupTranslationsFieldsHandler']);
             Hook::add('Schema::get::publication', [$this, 'addOurFieldsToPublicationSchema']);
         }
 
@@ -123,9 +125,9 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
     private function getTranslationDataForm($submission, $request)
     {
         $context = $request->getContext();
-        $publication = $submission->getLatestPublication();
-        $publicationEndpoint = 'submissions/' . $submission->getId() . '/publications/' . $publication->getId();
-        $saveFormUrl = $request->getDispatcher()->url($request, Application::ROUTE_API, $context->getPath(), $publicationEndpoint);
+        $saveFormUrl = $request
+            ->getDispatcher()
+            ->url($request, Application::ROUTE_API, $context->getPath(), "translationsFields/saveTranslationFields", null, null, ['submissionId' => $submission->getId()]);
 
         return new TranslationDataForm($saveFormUrl, $submission);
     }
@@ -235,6 +237,28 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         $output .= $templateMgr->fetch($this->getTemplateResource('translationDataTab.tpl'));
 
         return Hook::CONTINUE;
+    }
+
+    public function setupTranslationsFieldsHandler($hookName, $params)
+    {
+        $request = $params[0];
+        $router = $request->getRouter();
+
+        if (!($router instanceof \PKP\core\APIRouter)) {
+            return;
+        }
+
+        if (str_contains($request->getRequestPath(), 'api/v1/translationsFields')) {
+            $handler = new TranslationsFieldsHandler();
+        }
+
+        if (!isset($handler)) {
+            return;
+        }
+
+        $router->setHandler($handler);
+        $handler->getApp()->run();
+        exit;
     }
 }
 
