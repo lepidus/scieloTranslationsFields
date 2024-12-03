@@ -7,7 +7,7 @@ use GuzzleHttp\Psr7\Response;
 use APP\submission\Submission;
 use APP\publication\Publication;
 use APP\facades\Repo;
-use APP\plugins\reports\scieloTranslationsFields\classes\clients\DoiClient;
+use APP\plugins\generic\scieloTranslationsFields\classes\clients\DoiClient;
 
 class DoiClientTest extends TestCase
 {
@@ -28,7 +28,7 @@ class DoiClientTest extends TestCase
     private function createMockGuzzleClient()
     {
         $mockResponse = new Response(200, [], $this->expectedDoiCitation);
-        $mockHandler = new MockHandler($mockResponse);
+        $mockHandler = new MockHandler([$mockResponse]);
         $guzzleClient = new Client(['handler' => $mockHandler]);
 
         return $guzzleClient;
