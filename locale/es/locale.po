@@ -41,5 +41,8 @@ msgstr "DOI"
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi.description"
 msgstr "Por favor ingresse el DOI del documento original que este envío está traduciendo"
 
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentCitation"
+msgstr "Cita del documento original"
+
 msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required"
 msgstr "Debe informar si el documento original tiene DOI"

@@ -8,6 +8,7 @@ use PKP\security\authorization\PolicySet;
 use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
 use PKP\db\DAORegistry;
 use APP\facades\Repo;
+use APP\plugins\generic\scieloTranslationsFields\classes\clients\DoiClient;
 
 class TranslationsFieldsHandler extends APIHandler
 {
@@ -56,9 +57,15 @@ class TranslationsFieldsHandler extends APIHandler
         $originalDocumentHasDoi = $requestParams['originalDocumentHasDoi'];
         $originalDocumentDoi = $requestParams['originalDocumentDoi'];
 
+        if ($originalDocumentDoi) {
+            $doiClient = new DoiClient();
+            $originalDocumentCitation = $doiClient->getApaCitation($originalDocumentDoi);
+        }
+
         Repo::publication()->edit($publication, [
             'originalDocumentHasDoi' => $originalDocumentHasDoi,
-            'originalDocumentDoi' => $originalDocumentDoi
+            'originalDocumentDoi' => $originalDocumentDoi,
+            'originalDocumentCitation' => $originalDocumentCitation
         ]);
 
         $submission = Repo::submission()->get($submission->getId());

@@ -44,5 +44,18 @@
                 </template>
             </div>
         </div>
+        <div 
+            v-if="publication.originalDocumentHasDoi"
+            class="submissionWizard__reviewPanel__item"
+        >
+            <h4 class="submissionWizard__reviewPanel__item__header">
+                {translate key="plugins.generic.scieloTranslationsFields.originalDocumentCitation"}
+            </h4>
+            <div class="submissionWizard__reviewPanel__item__value" style="text-align: justify;">
+                <template>
+                    {{ publication.originalDocumentCitation }}
+                </template>
+            </div>
+        </div>
     </div>
 </div>

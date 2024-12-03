@@ -68,6 +68,11 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
             'apiSummary' => true,
             'validation' => ['nullable'],
         ];
+        $schema->properties->{'originalDocumentCitation'} = (object) [
+            'type' => 'string',
+            'apiSummary' => true,
+            'validation' => ['nullable'],
+        ];
 
         return Hook::CONTINUE;
     }
