@@ -81,6 +81,7 @@ describe('SciELO Translations Fields - Original document citation features', fun
         
         cy.contains('The original document has a DOI');
         cy.contains(submissionData.originalDoi);
+        cy.contains(submissionData.originalDoiCitation);
 
         cy.contains('button', 'Submit').click();
         cy.get('.modal__panel:visible').within(() => {
@@ -97,6 +98,6 @@ describe('SciELO Translations Fields - Original document citation features', fun
         cy.get('#translationData-button').click();
 
         cy.contains('Original document citation');
-        cy.get('input[name="originalDocumentCitation"]').should('have.value', submissionData.originalDoiCitation);
+        cy.contains(submissionData.originalDoiCitation);
     });
 });
