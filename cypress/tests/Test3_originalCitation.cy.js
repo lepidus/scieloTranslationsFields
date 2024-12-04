@@ -80,7 +80,7 @@ describe('SciELO Translations Fields - Original document citation features', fun
         cy.contains('h4', 'Original document citation').should('not.exist');
 
         cy.contains('.pkpSteps__step__label', 'Details').click();
-        cy.get('input[name="originalDocumentDoi"]').type(submissionData.originalDoi, {delay: 0});
+        cy.get('input[name="originalDocumentDoi"]').clear().type(submissionData.originalDoi, {delay: 0});
         Cypress._.times(4, () => {
             cy.contains('button', 'Continue').click();
         });

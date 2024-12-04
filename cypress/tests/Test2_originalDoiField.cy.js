@@ -97,7 +97,7 @@ describe('SciELO Translations Fields - Original DOI features', function () {
         cy.contains('The DOI entered is invalid. Please include only the identifier (e.g. "10.1234/ExampleDOI")');
 
         cy.contains('.pkpSteps__step__label', 'Details').click();
-        cy.get('input[name="originalDocumentDoi"]').type(submissionData.originalDoi, {delay: 0});
+        cy.get('input[name="originalDocumentDoi"]').clear().type(submissionData.originalDoi, {delay: 0});
         Cypress._.times(4, () => {
             cy.contains('button', 'Continue').click();
         });
