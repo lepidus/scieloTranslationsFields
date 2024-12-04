@@ -125,7 +125,7 @@ describe('SciELO Translations Fields - Original DOI features', function () {
         cy.contains('DOI')
         cy.get('input[name="originalDocumentDoi"]').should('have.value', submissionData.originalDoi);
 
-        cy.get('input[name="originalDocumentDoi"]').type('Invalid DOI', {delay: 0});
+        cy.get('input[name="originalDocumentDoi"]').clear().type('Invalid DOI', {delay: 0});
         cy.contains('button', 'Save').click();
         cy.contains('The DOI entered is invalid. Please include only the identifier (e.g. "10.1234/ExampleDOI")');
     });
