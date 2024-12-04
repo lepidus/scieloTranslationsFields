@@ -17,7 +17,7 @@ class TranslationDataForm extends FormComponent
         $publication = $submission->getCurrentPublication();
         $originalDocumentDoi = $publication->getData('originalDocumentDoi');
 
-        $this->action = $action;
+        $this->action = $action . "&placedOn=$placedOn";
         $this->addField(new FieldOptions('originalDocumentHasDoi', [
             'label' => __('plugins.generic.scieloTranslationsFields.originalDocumentHasDoi'),
             'description' => __('plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.description'),

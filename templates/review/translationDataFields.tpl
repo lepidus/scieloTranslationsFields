@@ -41,7 +41,7 @@
             <div class="submissionWizard__reviewPanel__item__value">
                 <notification v-if="errors.originalDocumentDoi" type="warning">
                     <icon icon="exclamation-triangle" :inline="true"></icon>
-                    {{ errors.originalDocumentDoi }}
+                    {{ errors.originalDocumentDoi[0] }}
                 </notification>
                 <template v-else>
                     {{ publication.originalDocumentDoi }}

@@ -58,6 +58,7 @@ class TranslationsFieldsHandler extends APIHandler
     public function saveTranslationFields($slimRequest, $response, $args)
     {
         $requestParams = $slimRequest->getParsedBody();
+        $placedOn = $slimRequest->getQueryParams()['placedOn'];
         $submission = $this->getSubmission($slimRequest);
         $publication = $submission->getCurrentPublication();
 
@@ -68,6 +69,10 @@ class TranslationsFieldsHandler extends APIHandler
         if ($originalDocumentHasDoi && $this->validateOriginalDoi($originalDocumentDoi)) {
             $doiClient = new DoiClient();
             $originalDocumentCitation = $doiClient->getApaCitation($originalDocumentDoi);
+        } elseif ($placedOn == 'workflow') {
+            return $response->withStatus(400)->withJson([
+                'originalDocumentDoi' => [__('plugins.generic.scieloTranslationsFields.originalDocumentDoi.invalidDoi')]
+            ]);
         }
 
         Repo::publication()->edit($publication, [
