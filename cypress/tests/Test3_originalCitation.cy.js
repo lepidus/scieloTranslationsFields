@@ -69,13 +69,22 @@ describe('SciELO Translations Fields - Original document citation features', fun
 
         beginSubmission(submissionData);
         cy.get('input[name="originalDocumentHasDoi"][value="1"]').check();
-        cy.get('input[name="originalDocumentDoi"]').type(submissionData.originalDoi, {delay: 0});
+        cy.get('input[name="originalDocumentDoi"]').type('Invalid DOI', {delay: 0});
         detailsStep(submissionData);
         cy.addSubmissionGalleys(submissionData.files);
         cy.contains('button', 'Continue').click();
         contributorsStep(submissionData);
         cy.contains('button', 'Continue').click();
-        
+
+        cy.contains('The DOI entered is invalid');
+        cy.contains('h4', 'Original document citation').should('not.exist');
+
+        cy.contains('.pkpSteps__step__label', 'Details').click();
+        cy.get('input[name="originalDocumentDoi"]').type(submissionData.originalDoi, {delay: 0});
+        Cypress._.times(4, () => {
+            cy.contains('button', 'Continue').click();
+        });
+
         cy.contains('The original document has a DOI');
         cy.contains(submissionData.originalDoi);
         cy.contains(submissionData.originalDoiCitationPart);
