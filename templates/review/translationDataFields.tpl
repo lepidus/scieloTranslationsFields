@@ -39,8 +39,28 @@
                 {translate key="plugins.generic.scieloTranslationsFields.originalDocumentDoi"}
             </h4>
             <div class="submissionWizard__reviewPanel__item__value">
-                <template>
+                <notification v-if="errors.originalDocumentDoi" type="warning">
+                    <icon icon="exclamation-triangle" :inline="true"></icon>
+                    {{ errors.originalDocumentDoi[0] }}
+                </notification>
+                <template v-else>
                     {{ publication.originalDocumentDoi }}
+                </template>
+            </div>
+        </div>
+        <div 
+            v-if="publication.originalDocumentHasDoi && !errors.originalDocumentDoi"
+            class="submissionWizard__reviewPanel__item"
+        >
+            <h4 class="submissionWizard__reviewPanel__item__header">
+                {translate key="plugins.generic.scieloTranslationsFields.originalDocumentCitation"}
+            </h4>
+            <div class="submissionWizard__reviewPanel__item__value" style="text-align: justify;">
+                <template v-if="publication.originalDocumentCitation">
+                    {{ publication.originalDocumentCitation }}
+                </template>
+                <template>
+                    {translate key="plugins.generic.scieloTranslationsFields.originalDocumentCitation.couldntRetrieve"}
                 </template>
             </div>
         </div>

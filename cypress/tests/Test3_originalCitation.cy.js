@@ -34,20 +34,21 @@ function contributorsStep(submissionData) {
     cy.contains('button', 'Continue').click();
 }
 
-describe('SciELO Translations Fields - Original DOI features', function () {
+describe('SciELO Translations Fields - Original document citation features', function () {
 	let submissionData;
 
 	before(function () {
 		submissionData = {
-			title: "For whom the bell tolls",
-			abstract: 'A poem, which describes the idea that all person are connected and part of a whole',
-			keywords: ['poem'],
-            originalDoi: '10.4567/OriginalDoiTranslated',
+			title: "Voodoo Child",
+			abstract: 'Great guitar solos',
+			keywords: ['guitar'],
+            originalDoi: '10.1590/0037-8682-0167-2020',
+            originalDoiCitationPart: 'COVID-19 in Brazil: advantages of a socialized unified health system and preparation to contain cases.',
             contributors: [
                 {
-                    'given': 'James',
-                    'family': 'Hammett',
-                    'email': 'james.hammett@outlook.com',
+                    'given': 'Jimi',
+                    'family': 'Hendrix',
+                    'email': 'jimi.hendrix@outlook.com',
                     'country': 'United States'
                 }
             ],
@@ -62,39 +63,21 @@ describe('SciELO Translations Fields - Original DOI features', function () {
 		}
 	});
 
-    it('Original DOI field is displayed at submission wizard', function() {
+    it('Creates a new submission with a deposited original DOI', function() {
         cy.login('ckwantes', null, 'publicknowledge');
         cy.get('div#myQueue a:contains("New Submission")').click();
 
         beginSubmission(submissionData);
-
-        cy.contains('h2', 'Translation data');
-        cy.contains('Please provide the following data regarding the translation you are submitting.')
-        cy.contains('legend', 'Original document DOI');
-        cy.contains('Does the original document this submission is translating have a DOI?');
-
+        cy.get('input[name="originalDocumentHasDoi"][value="1"]').check();
+        cy.get('input[name="originalDocumentDoi"]').type('Invalid DOI', {delay: 0});
         detailsStep(submissionData);
         cy.addSubmissionGalleys(submissionData.files);
         cy.contains('button', 'Continue').click();
         contributorsStep(submissionData);
         cy.contains('button', 'Continue').click();
 
-        cy.wait(1000);
-        cy.contains('h3', 'Translation data');
-        cy.contains('h4', 'Original document DOI');
-        cy.get('h4').contains(/^DOI$/).should('not.exist');
-        cy.contains('You must inform if the original document has a DOI');
-        cy.contains('button', 'Submit').should('be.disabled');
-
-        cy.contains('.pkpSteps__step__label', 'Details').click();
-        cy.get('input[name="originalDocumentHasDoi"][value="1"]').check();
-        cy.contains('label', 'DOI');
-        cy.contains('Please insert the DOI of the original document this submission is translating');
-        cy.get('input[name="originalDocumentDoi"]').type('Invalid DOI', {delay: 0});
-        Cypress._.times(4, () => {
-            cy.contains('button', 'Continue').click();
-        });
-        cy.contains('The DOI entered is invalid. Please include only the identifier (e.g. "10.1234/ExampleDOI")');
+        cy.contains('The DOI entered is invalid');
+        cy.contains('h4', 'Original document citation').should('not.exist');
 
         cy.contains('.pkpSteps__step__label', 'Details').click();
         cy.get('input[name="originalDocumentDoi"]').clear().type(submissionData.originalDoi, {delay: 0});
@@ -103,8 +86,8 @@ describe('SciELO Translations Fields - Original DOI features', function () {
         });
 
         cy.contains('The original document has a DOI');
-        cy.contains('h4', 'DOI');
         cy.contains(submissionData.originalDoi);
+        cy.contains(submissionData.originalDoiCitationPart);
 
         cy.contains('button', 'Submit').click();
         cy.get('.modal__panel:visible').within(() => {
@@ -113,22 +96,14 @@ describe('SciELO Translations Fields - Original DOI features', function () {
         cy.waitJQuery();
         cy.contains('h1', 'Submission complete');
     });
-    it('Original DOI field is displayed at Workflow page', function () {
+    it('Original document citation is shown at workflow', function () {
         cy.login('ckwantes', null, 'publicknowledge');
         cy.findSubmission('myQueue', submissionData.title);
 
         cy.get('#publication-button').click();
         cy.get('#translationData-button').click();
 
-        cy.contains('Original document DOI');
-        cy.get('input[name="originalDocumentHasDoi"][value="1"]').should('be.checked');
-        cy.contains('DOI')
-        cy.get('input[name="originalDocumentDoi"]').should('have.value', submissionData.originalDoi);
-
-        cy.get('input[name="originalDocumentDoi"]').clear().type('Invalid DOI', {delay: 0});
-        cy.get('#translationData').within(() => {
-            cy.contains('button', 'Save').click();
-        });
-        cy.contains('The DOI entered is invalid. Please include only the identifier (e.g. "10.1234/ExampleDOI")');
+        cy.contains('Original document citation');
+        cy.contains(submissionData.originalDoiCitationPart);
     });
 });
