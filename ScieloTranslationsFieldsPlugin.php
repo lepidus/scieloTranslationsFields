@@ -182,14 +182,15 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         $submission = $params[1];
         $publication = $submission->getCurrentPublication();
 
-        if (is_null($publication->getData('originalDocumentHasDoi'))) {
+        $originalDocumentHasDoi = $publication->getData('originalDocumentHasDoi');
+        if (is_null($originalDocumentHasDoi)) {
             $errors['originalDocumentHasDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required')];
         }
 
         $doiValidator = new DoiValidator();
         $originalDocumentDoi = $publication->getData('originalDocumentDoi');
 
-        if (!$doiValidator->validate($originalDocumentDoi)) {
+        if ($originalDocumentHasDoi && !$doiValidator->validate($originalDocumentDoi)) {
             $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.originalDocumentDoi.invalidDoi')];
         }
 
