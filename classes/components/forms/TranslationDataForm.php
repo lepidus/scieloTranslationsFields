@@ -43,7 +43,7 @@ class TranslationDataForm extends FormComponent
             'showWhen' => ['originalDocumentHasDoi', 1]
         ]));
 
-        if (!empty($originalDocumentDoi) && $placedOn = 'workflow') {
+        if (!empty($originalDocumentDoi) && $placedOn == 'workflow') {
             $originalDocumentCitation = $publication->getData('originalDocumentCitation');
 
             $this->addField(new FieldHTML('originalDocumentDoi', [
