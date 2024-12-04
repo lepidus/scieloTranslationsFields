@@ -53,6 +53,7 @@ class TranslationDataForm extends FormComponent
             $this->addField(new FieldHTML('originalDocumentDoi', [
                 'label' => __('plugins.generic.scieloTranslationsFields.originalDocumentCitation'),
                 'description' => "<p style=\"text-align: justify\">{$originalDocumentCitation}</p>",
+                'showWhen' => ['originalDocumentHasDoi', 1]
             ]));
         }
     }
