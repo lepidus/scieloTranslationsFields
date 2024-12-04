@@ -56,8 +56,11 @@
                 {translate key="plugins.generic.scieloTranslationsFields.originalDocumentCitation"}
             </h4>
             <div class="submissionWizard__reviewPanel__item__value" style="text-align: justify;">
-                <template>
+                <template v-if="publication.originalDocumentCitation">
                     {{ publication.originalDocumentCitation }}
+                </template>
+                <template>
+                    {translate key="plugins.generic.scieloTranslationsFields.originalDocumentCitation.couldntRetrieve"}
                 </template>
             </div>
         </div>

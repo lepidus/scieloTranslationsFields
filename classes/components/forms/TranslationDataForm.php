@@ -46,6 +46,10 @@ class TranslationDataForm extends FormComponent
         if (!empty($originalDocumentDoi) && $placedOn == 'workflow') {
             $originalDocumentCitation = $publication->getData('originalDocumentCitation');
 
+            if (empty($originalDocumentCitation)) {
+                $originalDocumentCitation = __('plugins.generic.scieloTranslationsFields.originalDocumentCitation.couldntRetrieve');
+            }
+
             $this->addField(new FieldHTML('originalDocumentDoi', [
                 'label' => __('plugins.generic.scieloTranslationsFields.originalDocumentCitation'),
                 'description' => "<p style=\"text-align: justify\">{$originalDocumentCitation}</p>",

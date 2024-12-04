@@ -47,5 +47,8 @@ msgstr "El DOI introducido no es válido. Por favor, introduzca sólo el identif
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentCitation"
 msgstr "Cita del documento original"
 
+msgid "plugins.generic.scieloTranslationsFields.originalDocumentCitation.couldntRetrieve"
+msgstr "No fue posible obtener la cita del DOI informado"
+
 msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required"
 msgstr "Debe informar si el documento original tiene DOI"
