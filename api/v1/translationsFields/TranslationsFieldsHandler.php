@@ -9,6 +9,7 @@ use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
 use PKP\db\DAORegistry;
 use APP\facades\Repo;
 use APP\plugins\generic\scieloTranslationsFields\classes\clients\DoiClient;
+use APP\plugins\generic\scieloTranslationsFields\classes\DoiValidator;
 
 class TranslationsFieldsHandler extends APIHandler
 {
@@ -48,6 +49,12 @@ class TranslationsFieldsHandler extends APIHandler
         return Repo::submission()->get($submissionId);
     }
 
+    private function validateOriginalDoi($originalDocumentDoi)
+    {
+        $doiValidator = new DoiValidator();
+        return $doiValidator->validate($originalDocumentDoi);
+    }
+
     public function saveTranslationFields($slimRequest, $response, $args)
     {
         $requestParams = $slimRequest->getParsedBody();
@@ -56,8 +63,9 @@ class TranslationsFieldsHandler extends APIHandler
 
         $originalDocumentHasDoi = $requestParams['originalDocumentHasDoi'];
         $originalDocumentDoi = $requestParams['originalDocumentDoi'];
+        $originalDocumentCitation = null;
 
-        if ($originalDocumentDoi) {
+        if ($originalDocumentHasDoi && $this->validateOriginalDoi($originalDocumentDoi)) {
             $doiClient = new DoiClient();
             $originalDocumentCitation = $doiClient->getApaCitation($originalDocumentDoi);
         }

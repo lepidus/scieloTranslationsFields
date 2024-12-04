@@ -39,13 +39,17 @@
                 {translate key="plugins.generic.scieloTranslationsFields.originalDocumentDoi"}
             </h4>
             <div class="submissionWizard__reviewPanel__item__value">
-                <template>
+                <notification v-if="errors.originalDocumentDoi" type="warning">
+                    <icon icon="exclamation-triangle" :inline="true"></icon>
+                    {{ errors.originalDocumentDoi }}
+                </notification>
+                <template v-else>
                     {{ publication.originalDocumentDoi }}
                 </template>
             </div>
         </div>
         <div 
-            v-if="publication.originalDocumentHasDoi"
+            v-if="publication.originalDocumentHasDoi && !errors.originalDocumentDoi"
             class="submissionWizard__reviewPanel__item"
         >
             <h4 class="submissionWizard__reviewPanel__item__header">

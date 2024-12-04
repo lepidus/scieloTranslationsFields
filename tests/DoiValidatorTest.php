@@ -5,7 +5,7 @@ use APP\plugins\generic\scieloTranslationsFields\classes\DoiValidator;
 
 class DoiValidatorTest extends TestCase
 {
-    public function testValidateValidDoi()
+    public function testValidateValidDois()
     {
         $doiValidator = new DoiValidator();
 
@@ -14,7 +14,7 @@ class DoiValidatorTest extends TestCase
         $this->assertTrue($doiValidator->validate('10.1109/5.771073'));
     }
 
-    public function testValidateInvalidDoi()
+    public function testValidateInvalidDois()
     {
         $doiValidator = new DoiValidator();
 
