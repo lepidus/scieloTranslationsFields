@@ -127,19 +127,19 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         return $editedSections;
     }
 
-    private function getTranslationDataForm($submission, $request)
+    private function getTranslationDataForm($submission, $request, $placedOn)
     {
         $context = $request->getContext();
         $saveFormUrl = $request
             ->getDispatcher()
             ->url($request, Application::ROUTE_API, $context->getPath(), "translationsFields/saveTranslationFields", null, null, ['submissionId' => $submission->getId()]);
 
-        return new TranslationDataForm($saveFormUrl, $submission);
+        return new TranslationDataForm($saveFormUrl, $submission, $placedOn);
     }
 
     private function addTranslationDataSection($stepSections, $submission, $request)
     {
-        $translationDataForm = $this->getTranslationDataForm($submission, $request);
+        $translationDataForm = $this->getTranslationDataForm($submission, $request, 'submissionWizard');
 
         $stepSections[] = [
             'id' => 'translationData',
@@ -225,7 +225,7 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
             return Hook::CONTINUE;
         }
 
-        $translationDataForm = $this->getTranslationDataForm($submission, $request);
+        $translationDataForm = $this->getTranslationDataForm($submission, $request, 'workflow');
         $components = $templateMgr->getState('components');
         $components[$translationDataForm->id] = $translationDataForm->getConfig();
 
