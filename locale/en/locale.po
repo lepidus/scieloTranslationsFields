@@ -23,26 +23,11 @@ msgstr "Translation data"
 msgid "plugins.generic.scieloTranslationsFields.translationData.description"
 msgstr "Please provide the following data regarding the translation you are submitting."
 
-msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi"
-msgstr "Original document DOI"
-
-msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.description"
-msgstr "Does the original document this submission is translating have a DOI?"
-
-msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.yes"
-msgstr "The original document has a DOI"
-
-msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.no"
-msgstr "The original document does not have a DOI"
-
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi"
-msgstr "DOI"
+msgstr "Original document DOI"
 
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi.description"
 msgstr "Please insert the DOI of the original document this submission is translating"
-
-msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi.invalidDoi"
-msgstr "The DOI entered is invalid. Please include only the identifier (e.g. \"10.1234/ExampleDOI\")"
 
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentCitation"
 msgstr "Original document citation"
@@ -50,5 +35,8 @@ msgstr "Original document citation"
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentCitation.couldntRetrieve"
 msgstr "It was not possible to obtain the citation of the DOI informed"
 
-msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required"
-msgstr "You must inform if the original document has a DOI"
+msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.required"
+msgstr "You must inform the DOI of the original document this submission is translating"
+
+msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi"
+msgstr "The DOI entered is invalid. Please include only the identifier (e.g. \"10.1234/ExampleDOI\")"

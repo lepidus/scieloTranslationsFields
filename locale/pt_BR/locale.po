@@ -23,26 +23,11 @@ msgstr "Dados da tradução"
 msgid "plugins.generic.scieloTranslationsFields.translationData.description"
 msgstr "Forneça os seguintes dados relativos a tradução que você está submetendo"
 
-msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi"
-msgstr "DOI do documento original"
-
-msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.description"
-msgstr "O documento original que esta submissão está traduzindo possui DOI?"
-
-msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.yes"
-msgstr "O documento original possui um DOI"
-
-msgid "plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.no"
-msgstr "O documento original não possui um DOI"
-
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi"
-msgstr "DOI"
+msgstr "DOI do documento original"
 
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi.description"
 msgstr "Por favor, insira o DOI do documento original que esta submissão está traduzindo"
-
-msgid "plugins.generic.scieloTranslationsFields.originalDocumentDoi.invalidDoi"
-msgstr "O DOI inserido é inválido. Por favor, insira apenas o identificador (ex.: \"10.1234/ExemploDOI\")"
 
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentCitation"
 msgstr "Citação do documento original"
@@ -50,5 +35,8 @@ msgstr "Citação do documento original"
 msgid "plugins.generic.scieloTranslationsFields.originalDocumentCitation.couldntRetrieve"
 msgstr "Não foi possível obter a citação do DOI informado"
 
-msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required"
-msgstr "Você deve informar se o documento original possui um DOI"
+msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.required"
+msgstr "Você deve informar o DOI do documento original que esta submissão está traduzindo"
+
+msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi"
+msgstr "O DOI inserido é inválido. Por favor, insira apenas o identificador (ex.: \"10.1234/ExemploDOI\")"
