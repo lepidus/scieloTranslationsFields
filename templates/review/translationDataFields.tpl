@@ -12,29 +12,7 @@
         </pkp-button>
     </div>
     <div class="submissionWizard__reviewPanel__body">
-        <div class="submissionWizard__reviewPanel__item">
-            <h4 class="submissionWizard__reviewPanel__item__header">
-                {translate key="plugins.generic.scieloTranslationsFields.originalDocumentHasDoi"}
-            </h4>
-            <div class="submissionWizard__reviewPanel__item__value">
-                <notification v-if="errors.originalDocumentHasDoi" type="warning">
-                    <icon icon="exclamation-triangle" :inline="true"></icon>
-                    {translate key="plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required"}
-                </notification>
-                <template v-else>
-                    <div v-if="publication.originalDocumentHasDoi">
-                        {translate key="plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.yes"}
-                    </div>
-                    <div v-else>
-                        {translate key="plugins.generic.scieloTranslationsFields.originalDocumentHasDoi.no"}
-                    </div>
-                </template>
-            </div>
-        </div>
-        <div 
-            v-if="publication.originalDocumentHasDoi"
-            class="submissionWizard__reviewPanel__item"
-        >
+        <div  class="submissionWizard__reviewPanel__item">
             <h4 class="submissionWizard__reviewPanel__item__header">
                 {translate key="plugins.generic.scieloTranslationsFields.originalDocumentDoi"}
             </h4>
@@ -49,7 +27,7 @@
             </div>
         </div>
         <div 
-            v-if="publication.originalDocumentHasDoi && !errors.originalDocumentDoi"
+            v-if="!errors.originalDocumentDoi"
             class="submissionWizard__reviewPanel__item"
         >
             <h4 class="submissionWizard__reviewPanel__item__header">

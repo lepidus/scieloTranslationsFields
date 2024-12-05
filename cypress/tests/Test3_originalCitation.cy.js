@@ -68,7 +68,6 @@ describe('SciELO Translations Fields - Original document citation features', fun
         cy.get('div#myQueue a:contains("New Submission")').click();
 
         beginSubmission(submissionData);
-        cy.get('input[name="originalDocumentHasDoi"][value="1"]').check();
         cy.get('input[name="originalDocumentDoi"]').type('Invalid DOI', {delay: 0});
         detailsStep(submissionData);
         cy.addSubmissionGalleys(submissionData.files);
@@ -85,7 +84,6 @@ describe('SciELO Translations Fields - Original document citation features', fun
             cy.contains('button', 'Continue').click();
         });
 
-        cy.contains('The original document has a DOI');
         cy.contains(submissionData.originalDoi);
         cy.contains(submissionData.originalDoiCitationPart);
 

@@ -59,11 +59,6 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
     {
         $schema = &$params[0];
 
-        $schema->properties->{'originalDocumentHasDoi'} = (object) [
-            'type' => 'integer',
-            'apiSummary' => true,
-            'validation' => ['nullable'],
-        ];
         $schema->properties->{'originalDocumentDoi'} = (object) [
             'type' => 'string',
             'apiSummary' => true,
@@ -182,16 +177,15 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         $submission = $params[1];
         $publication = $submission->getCurrentPublication();
 
-        $originalDocumentHasDoi = $publication->getData('originalDocumentHasDoi');
-        if (is_null($originalDocumentHasDoi)) {
-            $errors['originalDocumentHasDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentHasDoi.required')];
+        $originalDocumentDoi = $publication->getData('originalDocumentDoi');
+        if (empty($originalDocumentDoi)) {
+            $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.required')];
+            return Hook::CONTINUE;
         }
 
         $doiValidator = new DoiValidator();
-        $originalDocumentDoi = $publication->getData('originalDocumentDoi');
-
-        if ($originalDocumentHasDoi && !$doiValidator->validate($originalDocumentDoi)) {
-            $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.originalDocumentDoi.invalidDoi')];
+        if (!$doiValidator->validate($originalDocumentDoi)) {
+            $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi')];
         }
 
         return Hook::CONTINUE;

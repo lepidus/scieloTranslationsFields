@@ -62,23 +62,21 @@ class TranslationsFieldsHandler extends APIHandler
         $submission = $this->getSubmission($slimRequest);
         $publication = $submission->getCurrentPublication();
 
-        $originalDocumentHasDoi = $requestParams['originalDocumentHasDoi'];
         $originalDocumentDoi = $requestParams['originalDocumentDoi'];
         $originalDocumentCitation = null;
 
-        if ($originalDocumentHasDoi) {
+        if (!empty($originalDocumentDoi)) {
             if ($this->validateOriginalDoi($originalDocumentDoi)) {
                 $doiClient = new DoiClient();
                 $originalDocumentCitation = $doiClient->getApaCitation($originalDocumentDoi);
             } elseif ($placedOn == 'workflow') {
                 return $response->withStatus(400)->withJson([
-                    'originalDocumentDoi' => [__('plugins.generic.scieloTranslationsFields.originalDocumentDoi.invalidDoi')]
+                    'originalDocumentDoi' => [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi')]
                 ]);
             }
         }
 
         Repo::publication()->edit($publication, [
-            'originalDocumentHasDoi' => $originalDocumentHasDoi,
             'originalDocumentDoi' => $originalDocumentDoi,
             'originalDocumentCitation' => $originalDocumentCitation
         ]);
