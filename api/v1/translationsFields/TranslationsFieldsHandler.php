@@ -71,7 +71,7 @@ class TranslationsFieldsHandler extends APIHandler
                 $originalDocumentCitation = $doiClient->getApaCitation($originalDocumentDoi);
             } elseif ($placedOn == 'workflow') {
                 return $response->withStatus(400)->withJson([
-                    'originalDocumentDoi' => [__('plugins.generic.scieloTranslationsFields.originalDocumentDoi.invalidDoi')]
+                    'originalDocumentDoi' => [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi')]
                 ]);
             }
         }
