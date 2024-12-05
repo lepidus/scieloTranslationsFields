@@ -62,11 +62,10 @@ class TranslationsFieldsHandler extends APIHandler
         $submission = $this->getSubmission($slimRequest);
         $publication = $submission->getCurrentPublication();
 
-        $originalDocumentHasDoi = $requestParams['originalDocumentHasDoi'];
         $originalDocumentDoi = $requestParams['originalDocumentDoi'];
         $originalDocumentCitation = null;
 
-        if ($originalDocumentHasDoi) {
+        if (!empty($originalDocumentDoi)) {
             if ($this->validateOriginalDoi($originalDocumentDoi)) {
                 $doiClient = new DoiClient();
                 $originalDocumentCitation = $doiClient->getApaCitation($originalDocumentDoi);
@@ -78,7 +77,6 @@ class TranslationsFieldsHandler extends APIHandler
         }
 
         Repo::publication()->edit($publication, [
-            'originalDocumentHasDoi' => $originalDocumentHasDoi,
             'originalDocumentDoi' => $originalDocumentDoi,
             'originalDocumentCitation' => $originalDocumentCitation
         ]);
