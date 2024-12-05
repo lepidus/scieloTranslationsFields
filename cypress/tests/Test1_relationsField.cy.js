@@ -16,7 +16,7 @@ function detailsStep(submissionData) {
         cy.wait(500);
         cy.get('#titleAbstract-keywords-control-en').type('{enter}', {delay: 0});
     });
-    cy.get('input[name="originalDocumentHasDoi"][value="0"]').check();
+    cy.get('input[name="originalDocumentDoi"]').type(submissionData.originalDoi, {delay: 0});
     cy.contains('button', 'Continue').click();
 }
 
@@ -43,6 +43,7 @@ describe('SciELO Translations Fields - Relations field features', function () {
 			title: "Living a boy's adventure tale",
 			abstract: 'Describes an adventure tale created and narrated by a boy',
 			keywords: ['adventure tale', 'boyhood'],
+            originalDoi: '10.4567/OriginalDoiTranslated',
             contributors: [
                 {
                     'given': 'Morten',
