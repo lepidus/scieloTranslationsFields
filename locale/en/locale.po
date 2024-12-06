@@ -40,3 +40,6 @@ msgstr "You must inform the DOI of the original document this submission is tran
 
 msgid "plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi"
 msgstr "The DOI entered is invalid. Please include only the identifier (e.g. \"10.1234/ExampleDOI\")"
+
+msgid "plugins.generic.scieloTranslationsFields.error.contributors.oneTranslator"
+msgstr "There must be at least one contributor with the \"Translator\" role"
