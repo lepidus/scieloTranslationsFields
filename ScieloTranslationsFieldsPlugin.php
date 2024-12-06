@@ -20,7 +20,7 @@ use APP\core\Application;
 use APP\pages\submission\SubmissionHandler;
 use APP\plugins\generic\scieloTranslationsFields\api\v1\translationsFields\TranslationsFieldsHandler;
 use APP\plugins\generic\scieloTranslationsFields\classes\components\forms\TranslationDataForm;
-use APP\plugins\generic\scieloTranslationsFields\classes\DoiValidator;
+use APP\plugins\generic\scieloTranslationsFields\classes\FieldsValidator;
 
 class ScieloTranslationsFieldsPlugin extends GenericPlugin
 {
@@ -183,8 +183,8 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
             return Hook::CONTINUE;
         }
 
-        $doiValidator = new DoiValidator();
-        if (!$doiValidator->validate($originalDocumentDoi)) {
+        $fieldsValidator = new FieldsValidator();
+        if (!$fieldsValidator->validateDoi($originalDocumentDoi)) {
             $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi')];
         }
 
