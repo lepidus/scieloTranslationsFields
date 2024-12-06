@@ -2,6 +2,9 @@
 
 use PKP\tests\DatabaseTestCase;
 use PKP\userGroup\UserGroup;
+use APP\submission\Submission;
+use APP\publication\Publication;
+use APP\author\Author;
 use PKP\security\Role;
 use APP\facades\Repo;
 use APP\plugins\generic\scieloTranslationsFields\classes\FieldsValidator;
@@ -44,6 +47,39 @@ class FieldsValidatorTest extends DatabaseTestCase
         return $translatorsUserGroup;
     }
 
+    private function createTestAuthors()
+    {
+        $author1 = new Author();
+        $author1->setAllData([
+            'userGroupId' => 4,
+        ]);
+
+        $author2 = new Author();
+        $author2->setAllData([
+            'userGroupId' => $this->translatorsUserGroup->getId(),
+        ]);
+
+        return [$author1, $author2];
+    }
+
+    private function createTestSubmission($authors)
+    {
+        $publication = new Publication();
+        $publication->setAllData([
+            'id' => 789,
+            'authors' => $authors
+        ]);
+
+        $submission = new Submission();
+        $submission->setAllData([
+            'id' => 788,
+            'publications' => [$publication],
+            'currentPublicationId' => $publication->getId()
+        ]);
+
+        return $submission;
+    }
+
     public function testValidateValidDois()
     {
         $fieldsValidator = new FieldsValidator();
@@ -68,5 +104,21 @@ class FieldsValidatorTest extends DatabaseTestCase
         $retrievedUserGroup = $fieldsValidator->getTranslatorsUserGroup($this->contextId);
 
         $this->assertEquals($this->translatorsUserGroup->getId(), $retrievedUserGroup->getId());
+    }
+
+    public function testValidateSubmissionHasTranslator()
+    {
+        $fieldsValidator = new FieldsValidator();
+        $authors = $this->createTestAuthors();
+        $submission = $this->createTestSubmission([$authors[0]]);
+
+        $translatorsUserGroupId = $this->translatorsUserGroup->getId();
+        $submissionHasTranslator = $fieldsValidator->validateSubmissionHasTranslator($submission, $translatorsUserGroupId);
+        $this->assertFalse($submissionHasTranslator);
+
+        $publication = $submission->getCurrentPublication();
+        $publication->setData('authors', $authors);
+        $submissionHasTranslator = $fieldsValidator->validateSubmissionHasTranslator($submission, $translatorsUserGroupId);
+        $this->assertTrue($submissionHasTranslator);
     }
 }

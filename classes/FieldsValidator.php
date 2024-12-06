@@ -3,6 +3,7 @@
 namespace APP\plugins\generic\scieloTranslationsFields\classes;
 
 use PKP\userGroup\UserGroup;
+use APP\submission\Submission;
 use APP\facades\Repo;
 
 class FieldsValidator
@@ -27,5 +28,21 @@ class FieldsValidator
         }
 
         return null;
+    }
+
+    public function validateSubmissionHasTranslator(Submission $submission, int $translatorsUserGroupId): bool
+    {
+        $publication = $submission->getCurrentPublication();
+        $authors = $publication->getData('authors');
+
+        foreach ($authors as $author) {
+            $authorUserGroupId = $author->getData('userGroupId');
+
+            if ($authorUserGroupId == $translatorsUserGroupId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
