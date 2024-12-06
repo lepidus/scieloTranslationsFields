@@ -20,19 +20,19 @@ function detailsStep(submissionData) {
     cy.contains('button', 'Continue').click();
 }
 
-function contributorsStep(submissionData) {
-    submissionData.contributors.forEach(authorData => {
-        cy.contains('button', 'Add Contributor').click();
-        cy.get('input[name="givenName-en"]').type(authorData.given, {delay: 0});
-        cy.get('input[name="familyName-en"]').type(authorData.family, {delay: 0});
-        cy.get('input[name="email"]').type(authorData.email, {delay: 0});
-        cy.get('select[name="country"]').select(authorData.country);
-        
-        cy.get('.modal__panel:contains("Add Contributor")').find('button').contains('Save').click();
-        cy.waitJQuery();
-    });
+function addContributor(contributorData) {
+    cy.contains('button', 'Add Contributor').click();
+    cy.get('input[name="givenName-en"]').type(contributorData.given, {delay: 0});
+    cy.get('input[name="familyName-en"]').type(contributorData.family, {delay: 0});
+    cy.get('input[name="email"]').type(contributorData.email, {delay: 0});
+    cy.get('select[name="country"]').select(contributorData.country);
+    
+    cy.contains('.pkpFormField--options__optionLabel', contributorData.role).parent().within(() => {
+        cy.get('input[type="radio"]').click();
+    })
 
-    cy.contains('button', 'Continue').click();
+    cy.get('.modal__panel:contains("Add Contributor")').find('button').contains('Save').click();
+    cy.waitJQuery();
 }
 
 describe('SciELO Translations Fields - Contributors verifications', function () {
@@ -83,14 +83,15 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
         cy.get('#userGroupForm').within(() => {
             cy.get('#roleId').select('Author');
             cy.get('input[name="name[en]"]').type('Translator', {delay: 0});
-            cy.get('input[name="abbrev[en]"]').type('Trans', {delay: 0});
+            cy.contains('Role Name').click();
+            cy.get('input[name="abbrev[en]"]').type('TR', {delay: 0});
             cy.get('.submitFormButton').click();
         });
         
         cy.wait(1000);
         cy.contains('span', 'Translator');
     });
-    it('Creates a new submission. Asserts there is at least one translator contributor', function() {
+    it('Asserts there is at least one translator contributor', function () {
         cy.login('ckwantes', null, 'publicknowledge');
         cy.get('div#myQueue a:contains("New Submission")').click();
 
@@ -98,15 +99,17 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
         detailsStep(submissionData);
         cy.addSubmissionGalleys(submissionData.files);
         cy.contains('button', 'Continue').click();
-        contributorsStep([submissionData.contributors[0]]);
+        addContributor(submissionData.contributors[0]);
+        cy.contains('button', 'Continue').click();
         cy.contains('button', 'Continue').click();
 
         cy.contains('There must be at least one contributor with the "Translator" role');
 
         cy.contains('.pkpSteps__step__label', 'Contributors').click();
-        contributorsStep([submissionData.contributors[1]]);
-        cy.contains('button', 'Continue').click();
-        cy.contains('button', 'Continue').click();
+        addContributor(submissionData.contributors[1]);
+        Cypress._.times(3, () => {
+            cy.contains('button', 'Continue').click();
+        });
 
         cy.contains('span', 'Julian Casablancas').parent().within(() => {
             cy.contains('Author');
