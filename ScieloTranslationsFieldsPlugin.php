@@ -177,15 +177,24 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         $submission = $params[1];
         $publication = $submission->getCurrentPublication();
 
+        $fieldsValidator = new FieldsValidator();
         $originalDocumentDoi = $publication->getData('originalDocumentDoi');
+
         if (empty($originalDocumentDoi)) {
             $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.required')];
-            return Hook::CONTINUE;
+        } elseif (!$fieldsValidator->validateDoi($originalDocumentDoi)) {
+            $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi')];
         }
 
-        $fieldsValidator = new FieldsValidator();
-        if (!$fieldsValidator->validateDoi($originalDocumentDoi)) {
-            $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi')];
+        $contextId = $submission->getData('contextId');
+        $translatorsUserGroup = $fieldsValidator->getTranslatorsUserGroup($contextId);
+        if (!is_null($translatorsUserGroup)) {
+            $submissionHasTranslator = $fieldsValidator->validateSubmissionHasTranslator($submission, $translatorsUserGroup->getId());
+            if (!$submissionHasTranslator) {
+                $contributorsErrors = $errors['contributors'] ?? [];
+                $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.oneTranslator');
+                $errors['contributors'] = $contributorsErrors;
+            }
         }
 
         return Hook::CONTINUE;
