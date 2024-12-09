@@ -57,7 +57,8 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
                     'family': 'Hammond',
                     'email': 'albert.hammond@outlook.com',
                     'country': 'United States',
-                    'role': 'Translator'
+                    'role': 'Translator',
+                    'orcid': 'https://orcid.org/0000-0002-1825-0097'
                 }
             ],
             files: [
