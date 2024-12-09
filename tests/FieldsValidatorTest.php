@@ -121,4 +121,21 @@ class FieldsValidatorTest extends DatabaseTestCase
         $submissionHasTranslator = $fieldsValidator->validateSubmissionHasTranslator($submission, $translatorsUserGroupId);
         $this->assertTrue($submissionHasTranslator);
     }
+
+    public function testValidateTranslatorsHaveOrcid()
+    {
+        $fieldsValidator = new FieldsValidator();
+        $authors = $this->createTestAuthors();
+        $submission = $this->createTestSubmission($authors);
+
+        $translatorsUserGroupId = $this->translatorsUserGroup->getId();
+        $translatorsHaveOrcid = $fieldsValidator->translatorsHaveOrcid($submission, $translatorsUserGroupId);
+        $this->assertFalse($translatorsHaveOrcid);
+
+        $authors[1]->setData('orcid', 'https://orcid.org/0000-0002-1825-0097');
+        $publication = $submission->getCurrentPublication();
+        $publication->setData('authors', $authors);
+        $translatorsHaveOrcid = $fieldsValidator->translatorsHaveOrcid($submission, $translatorsUserGroupId);
+        $this->assertTrue($translatorsHaveOrcid);
+    }
 }

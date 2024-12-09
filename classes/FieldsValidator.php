@@ -45,4 +45,24 @@ class FieldsValidator
 
         return false;
     }
+
+    public function translatorsHaveOrcid(Submission $submission, int $translatorsUserGroupId): bool
+    {
+        $publication = $submission->getCurrentPublication();
+        $authors = $publication->getData('authors');
+
+        foreach ($authors as $author) {
+            $authorUserGroupId = $author->getData('userGroupId');
+
+            if ($authorUserGroupId == $translatorsUserGroupId) {
+                $authorOrcid = $author->getData('orcid');
+
+                if (empty($authorOrcid)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }
