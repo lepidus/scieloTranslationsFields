@@ -135,7 +135,7 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
                 cy.contains('button', 'Edit').click();
             });
         cy.get('input[name="orcid"]').type(submissionData.contributors[1].orcid, {delay: 0});
-        cy.get('.modal__panel:contains("Add Contributor")').find('button').contains('Save').click();
+        cy.get('.modal__panel:contains("Edit")').find('button').contains('Save').click();
         cy.waitJQuery();
 
         cy.contains('button', 'Continue').click();
