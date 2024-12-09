@@ -43,3 +43,6 @@ msgstr "El DOI introducido no es válido. Por favor, introduzca sólo el identif
 
 msgid "plugins.generic.scieloTranslationsFields.error.contributors.oneTranslator"
 msgstr "Debe añadir al menos un colaborador con el rol de \"Traductor\""
+
+msgid "plugins.generic.scieloTranslationsFields.error.contributors.translatorOrcid"
+msgstr "Los colaboradores con rol de \"Traductor\" deben tener su ORCID completado"
