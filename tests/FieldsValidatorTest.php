@@ -11,12 +11,14 @@ use APP\plugins\generic\scieloTranslationsFields\classes\FieldsValidator;
 
 class FieldsValidatorTest extends DatabaseTestCase
 {
+    private $fieldsValidator;
     private $translatorsUserGroup;
     private $contextId = 1;
     private $locale = 'en';
 
     public function setUp(): void
     {
+        $this->fieldsValidator = new FieldsValidator();
         $this->translatorsUserGroup = $this->createTranslatorsUserGroup();
     }
 
@@ -82,60 +84,53 @@ class FieldsValidatorTest extends DatabaseTestCase
 
     public function testValidateValidDois()
     {
-        $fieldsValidator = new FieldsValidator();
-
-        $this->assertTrue($fieldsValidator->validateDoi('10.1000/xyz123'));
-        $this->assertTrue($fieldsValidator->validateDoi('10.1038/nphys1170'));
-        $this->assertTrue($fieldsValidator->validateDoi('10.1109/5.771073'));
+        $this->assertTrue($this->fieldsValidator->validateDoi('10.1000/xyz123'));
+        $this->assertTrue($this->fieldsValidator->validateDoi('10.1038/nphys1170'));
+        $this->assertTrue($this->fieldsValidator->validateDoi('10.1109/5.771073'));
     }
 
     public function testValidateInvalidDois()
     {
-        $fieldsValidator = new FieldsValidator();
-
-        $this->assertFalse($fieldsValidator->validateDoi('10.1234'));
-        $this->assertFalse($fieldsValidator->validateDoi('10.1038/abc!123'));
-        $this->assertFalse($fieldsValidator->validateDoi('10./1000/abcd'));
+        $this->assertFalse($this->fieldsValidator->validateDoi('10.1234'));
+        $this->assertFalse($this->fieldsValidator->validateDoi('10.1038/abc!123'));
+        $this->assertFalse($this->fieldsValidator->validateDoi('10./1000/abcd'));
     }
 
     public function testGetTranslatorsUserGroup()
     {
-        $fieldsValidator = new FieldsValidator();
-        $retrievedUserGroup = $fieldsValidator->getTranslatorsUserGroup($this->contextId);
+        $retrievedUserGroup = $this->fieldsValidator->getTranslatorsUserGroup($this->contextId);
 
         $this->assertEquals($this->translatorsUserGroup->getId(), $retrievedUserGroup->getId());
     }
 
     public function testValidateSubmissionHasTranslator()
     {
-        $fieldsValidator = new FieldsValidator();
         $authors = $this->createTestAuthors();
         $submission = $this->createTestSubmission([$authors[0]]);
 
         $translatorsUserGroupId = $this->translatorsUserGroup->getId();
-        $submissionHasTranslator = $fieldsValidator->validateSubmissionHasTranslator($submission, $translatorsUserGroupId);
+        $submissionHasTranslator = $this->fieldsValidator->submissionHasTranslator($submission, $translatorsUserGroupId);
         $this->assertFalse($submissionHasTranslator);
 
         $publication = $submission->getCurrentPublication();
         $publication->setData('authors', $authors);
-        $submissionHasTranslator = $fieldsValidator->validateSubmissionHasTranslator($submission, $translatorsUserGroupId);
+        $submissionHasTranslator = $this->fieldsValidator->submissionHasTranslator($submission, $translatorsUserGroupId);
         $this->assertTrue($submissionHasTranslator);
     }
 
     public function testValidateTranslatorsHaveOrcid()
     {
-        $fieldsValidator = new FieldsValidator();
         $authors = $this->createTestAuthors();
         $submission = $this->createTestSubmission($authors);
 
         $translatorsUserGroupId = $this->translatorsUserGroup->getId();
-        $translatorsHaveOrcid = $fieldsValidator->translatorsHaveOrcid($submission, $translatorsUserGroupId);
+        $translatorsHaveOrcid = $this->fieldsValidator->translatorsHaveOrcid($submission, $translatorsUserGroupId);
         $this->assertFalse($translatorsHaveOrcid);
 
         $authors[1]->setData('orcid', 'https://orcid.org/0000-0002-1825-0097');
         $publication = $submission->getCurrentPublication();
         $publication->setData('authors', $authors);
-        $translatorsHaveOrcid = $fieldsValidator->translatorsHaveOrcid($submission, $translatorsUserGroupId);
+        $translatorsHaveOrcid = $this->fieldsValidator->translatorsHaveOrcid($submission, $translatorsUserGroupId);
         $this->assertTrue($translatorsHaveOrcid);
     }
 }

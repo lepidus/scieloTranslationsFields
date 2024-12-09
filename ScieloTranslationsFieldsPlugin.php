@@ -189,7 +189,7 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         $contextId = $submission->getData('contextId');
         $translatorsUserGroup = $fieldsValidator->getTranslatorsUserGroup($contextId);
         if (!is_null($translatorsUserGroup)) {
-            $submissionHasTranslator = $fieldsValidator->validateSubmissionHasTranslator($submission, $translatorsUserGroup->getId());
+            $submissionHasTranslator = $fieldsValidator->submissionHasTranslator($submission, $translatorsUserGroup->getId());
             if (!$submissionHasTranslator) {
                 $contributorsErrors = $errors['contributors'] ?? [];
                 $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.oneTranslator');

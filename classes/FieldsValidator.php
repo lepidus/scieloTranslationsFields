@@ -30,7 +30,7 @@ class FieldsValidator
         return null;
     }
 
-    public function validateSubmissionHasTranslator(Submission $submission, int $translatorsUserGroupId): bool
+    public function submissionHasTranslator(Submission $submission, int $translatorsUserGroupId): bool
     {
         $publication = $submission->getCurrentPublication();
         $authors = $publication->getData('authors');
