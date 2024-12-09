@@ -37,9 +37,11 @@ function addContributor(contributorData) {
 
 describe('SciELO Translations Fields - Contributors verifications', function () {
     let submissionData;
+    let testOrcid;
 
 	before(function () {
-		submissionData = {
+		testOrcid = 'https://orcid.org/0000-0002-1825-0097';
+        submissionData = {
 			title: "Alone, together",
 			abstract: 'Thoughts about relationship problems',
 			keywords: ['guitars'],
@@ -58,7 +60,6 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
                     'email': 'albert.hammond@outlook.com',
                     'country': 'United States',
                     'role': 'Translator',
-                    'orcid': 'https://orcid.org/0000-0002-1825-0097'
                 }
             ],
             files: [
@@ -134,7 +135,7 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
             .parent().parent().within(() => {
                 cy.contains('button', 'Edit').click();
             });
-        cy.get('input[name="orcid"]').type(submissionData.contributors[1].orcid, {delay: 0});
+        cy.get('input[name="orcid"]').type(testOrcid, {delay: 0});
         cy.get('.modal__panel:contains("Edit")').find('button').contains('Save').click();
         cy.waitJQuery();
 
@@ -145,12 +146,29 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
         cy.contains('The contributors with the "Translator" role must have their ORCID filled out')
             .should('not.exist');
     });
-    it('Submitter must be a contributor with ORCID filled', function () {
+    it('Submitter contributor must have ORCID filled', function () {
         cy.login('ckwantes', null, 'publicknowledge');
         cy.findSubmission('myQueue', submissionData.title);
 
+        Cypress._.times(4, () => {
+            cy.contains('button', 'Continue').click();
+        });
+        cy.contains('The submitter contributor must have their ORCID filled out');
+        
+        cy.contains('.pkpSteps__step__label', 'Contributors').click();
+        cy.get('.listPanel__itemTitle:visible:contains("Catherine Kwantes")')
+            .parent().parent().within(() => {
+                cy.contains('button', 'Edit').click();
+            });
+        cy.get('input[name="orcid"]').type(testOrcid, {delay: 0});
+        cy.get('.modal__panel:contains("Edit")').find('button').contains('Save').click();
+        cy.waitJQuery();
+
         cy.contains('button', 'Continue').click();
         cy.contains('button', 'Continue').click();
-        cy.contains('button', 'Continue').should('not.exist');
+
+        cy.wait(2000);
+        cy.contains('The submitter contributor must have their ORCID filled out')
+            .should('not.exist');
     });
 });
