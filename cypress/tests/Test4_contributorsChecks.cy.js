@@ -107,9 +107,8 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
 
         cy.contains('.pkpSteps__step__label', 'Contributors').click();
         addContributor(submissionData.contributors[1]);
-        Cypress._.times(3, () => {
-            cy.contains('button', 'Continue').click();
-        });
+        cy.contains('button', 'Continue').click();
+        cy.contains('button', 'Continue').click();
 
         cy.contains('span', 'Julian Casablancas').parent().within(() => {
             cy.contains('Author');
