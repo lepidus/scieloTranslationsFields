@@ -145,4 +145,12 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
         cy.contains('The contributors with the "Translator" role must have their ORCID filled out')
             .should('not.exist');
     });
+    it('Submitter must be a contributor with ORCID filled', function () {
+        cy.login('ckwantes', null, 'publicknowledge');
+        cy.findSubmission('myQueue', submissionData.title);
+
+        cy.contains('button', 'Continue').click();
+        cy.contains('button', 'Continue').click();
+        cy.contains('button', 'Continue').should('not.exist');
+    });
 });
