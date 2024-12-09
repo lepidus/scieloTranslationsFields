@@ -116,12 +116,32 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
         cy.contains('span', 'Albert Hammond').parent().within(() => {
             cy.contains('Translator');
         });
+        cy.contains('There must be at least one contributor with the "Translator" role')
+            .should('not.exist');
+    });
+    it('Translator contributor should have the ORCID filled', function () {
+        cy.login('ckwantes', null, 'publicknowledge');
+        cy.findSubmission('myQueue', submissionData.title);
 
-        cy.contains('button', 'Submit').click();
-        cy.get('.modal__panel:visible').within(() => {
-            cy.contains('button', 'Submit').click();
+        Cypress._.times(4, () => {
+            cy.contains('button', 'Continue').click();
         });
+        cy.contains('The contributors with the "Translator" role must have their ORCID filled out');
+        
+        cy.contains('.pkpSteps__step__label', 'Contributors').click();
+        cy.get('.listPanel__itemTitle:visible:contains("Albert Hammond")')
+            .parent().parent().within(() => {
+                cy.contains('button', 'Edit').click();
+            });
+        cy.get('input[name="orcid"]').type(submissionData.contributors[1].orcid, {delay: 0});
+        cy.get('.modal__panel:contains("Add Contributor")').find('button').contains('Save').click();
         cy.waitJQuery();
-        cy.contains('h1', 'Submission complete');
+
+        cy.contains('button', 'Continue').click();
+        cy.contains('button', 'Continue').click();
+
+        cy.wait(2000);
+        cy.contains('The contributors with the "Translator" role must have their ORCID filled out')
+            .should('not.exist');
     });
 });
