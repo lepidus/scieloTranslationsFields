@@ -4,6 +4,10 @@ namespace APP\plugins\generic\scieloTranslationsFields\classes;
 
 use PKP\userGroup\UserGroup;
 use APP\submission\Submission;
+use APP\author\Author;
+use PKP\user\User;
+use PKP\security\Role;
+use PKP\db\DAORegistry;
 use APP\facades\Repo;
 
 class FieldsValidator
@@ -64,5 +68,34 @@ class FieldsValidator
         }
 
         return true;
+    }
+
+    public function getSubmitterUser(int $submissionId): ?User
+    {
+        $stageAssignmentDao = DAORegistry::getDAO('StageAssignmentDAO');
+        $authorAssignments = $stageAssignmentDao->getBySubmissionAndRoleIds($submissionId, [Role::ROLE_ID_AUTHOR]);
+        $submitterAssignment = $authorAssignments->next();
+
+        if (!$submitterAssignment) {
+            return null;
+        }
+
+        $submitterId = $submitterAssignment->getData('userId');
+
+        return Repo::user()->get($submitterId);
+    }
+
+    public function getContributorForUser(Submission $submission, User $user): ?Author
+    {
+        $publication = $submission->getCurrentPublication();
+        $userEmail = $user->getData('email');
+
+        foreach ($publication->getData('authors') as $author) {
+            if ($author->getData('email') == $userEmail) {
+                return $author;
+            }
+        }
+
+        return null;
     }
 }

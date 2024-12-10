@@ -4,6 +4,7 @@ use PKP\tests\DatabaseTestCase;
 use PKP\userGroup\UserGroup;
 use APP\submission\Submission;
 use APP\publication\Publication;
+use PKP\user\User;
 use APP\author\Author;
 use PKP\security\Role;
 use APP\facades\Repo;
@@ -54,11 +55,13 @@ class FieldsValidatorTest extends DatabaseTestCase
         $author1 = new Author();
         $author1->setAllData([
             'userGroupId' => 4,
+            'email' => 'julian.casablancas@outlook.com'
         ]);
 
         $author2 = new Author();
         $author2->setAllData([
             'userGroupId' => $this->translatorsUserGroup->getId(),
+            'email' => 'albert.hammond@outlook.com'
         ]);
 
         return [$author1, $author2];
@@ -132,5 +135,20 @@ class FieldsValidatorTest extends DatabaseTestCase
         $publication->setData('authors', $authors);
         $translatorsHaveOrcid = $this->fieldsValidator->translatorsHaveOrcid($submission, $translatorsUserGroupId);
         $this->assertTrue($translatorsHaveOrcid);
+    }
+
+    public function testGetContributorForUser()
+    {
+        $authors = $this->createTestAuthors();
+        $submission = $this->createTestSubmission($authors);
+
+        $user = new User();
+        $user->setData('email', 'julian.casablancas@outlook.com');
+
+        $expectedAuthor = $authors[0];
+        $this->assertEquals($expectedAuthor, $this->fieldsValidator->getContributorForUser($submission, $user));
+
+        $user->setData('email', 'another.person@outlook.com');
+        $this->assertNull($this->fieldsValidator->getContributorForUser($submission, $user));
     }
 }
