@@ -46,3 +46,6 @@ msgstr "There must be at least one contributor with the \"Translator\" role"
 
 msgid "plugins.generic.scieloTranslationsFields.error.contributors.translatorOrcid"
 msgstr "The contributors with the \"Translator\" role must have their ORCID filled out"
+
+msgid "plugins.generic.scieloTranslationsFields.error.contributors.submitterOrcid"
+msgstr "The submitter contributor must have their ORCID filled out"

@@ -197,10 +197,18 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
             } elseif (!$fieldsValidator->translatorsHaveOrcid($submission, $translatorsUserGroup->getId())) {
                 $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.translatorOrcid');
             }
+        }
 
-            if (!empty($contributorsErrors)) {
-                $errors['contributors'] = $contributorsErrors;
+        $submitter = $fieldsValidator->getSubmitterUser($submission->getId());
+        if ($submitter) {
+            $contributor = $fieldsValidator->getContributorForUser($submission, $submitter);
+            if ($contributor && empty($contributor->getData('orcid'))) {
+                $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.submitterOrcid');
             }
+        }
+
+        if (!empty($contributorsErrors)) {
+            $errors['contributors'] = $contributorsErrors;
         }
 
         return Hook::CONTINUE;

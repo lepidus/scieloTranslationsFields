@@ -46,3 +46,6 @@ msgstr "Você deve adicionar ao menos um contribuidor com o papel de \"Tradutor\
 
 msgid "plugins.generic.scieloTranslationsFields.error.contributors.translatorOrcid"
 msgstr "Os contribuidores com papel de \"Tradutor\" devem ter seus ORCIDs preenchidos"
+
+msgid "plugins.generic.scieloTranslationsFields.error.contributors.submitterOrcid"
+msgstr "O contribuidor submissor deve ter seu ORCID preenchido"
