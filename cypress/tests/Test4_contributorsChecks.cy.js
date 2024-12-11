@@ -180,4 +180,43 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
         cy.contains('The submitter contributor must have their ORCID filled out')
             .should('not.exist');
     });
+    it('Clear ORCID of submitter user profile', function () {
+        cy.login('ckwantes', null, 'publicknowledge');
+		cy.get('.app__headerActions button').eq(1).click();
+        cy.contains('a', 'Edit Profile').click();
+
+		cy.get('a[name="publicProfile"]').click();
+		cy.get('input[name="orcid"]').clear();
+		cy.get('.submitFormButton:visible').click();
+    });
+    it('If submitter is not a contributor, their profile must have ORCID filled', function () {
+        cy.login('ckwantes', null, 'publicknowledge');
+        cy.findSubmission('myQueue', submissionData.title);
+
+        cy.contains('button', 'Continue').click();
+        cy.contains('button', 'Continue').click();
+        cy.get('.listPanel__itemTitle:visible:contains("Catherine Kwantes")')
+            .parent().parent().within(() => {
+                cy.contains('button', 'Delete').click();
+            });
+        cy.contains('button', 'Delete Contributor').click();
+        cy.waitJQuery();
+        cy.contains('button', 'Continue').click();
+        cy.contains('button', 'Continue').click();
+        cy.contains('The user making this submission must have their ORCID authenticated in their profile');
+
+		cy.get('.app__headerActions button').eq(1).click();
+        cy.contains('a', 'Edit Profile').click();
+		cy.get('a[name="publicProfile"]').click();
+		cy.get('input[name="orcid"]').clear().type(testOrcid, {delay: 0});
+		cy.get('.submitFormButton:visible').click();
+
+        cy.contains('.app__navItem', 'Submissions').click();
+        cy.findSubmission('myQueue', submissionData.title);
+        Cypress._.times(4, () => {
+            cy.contains('button', 'Continue').click();
+        });
+        cy.contains('The user making this submission must have their ORCID authenticated in their profile')
+            .should('not.exist');
+    });
 });
