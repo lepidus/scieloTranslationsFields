@@ -128,7 +128,7 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
         Cypress._.times(4, () => {
             cy.contains('button', 'Continue').click();
         });
-        cy.contains('The contributors with the "Translator" role must have their ORCID filled out');
+        cy.contains('The contributors with the "Translator" role must have their ORCID authenticated');
         
         cy.contains('.pkpSteps__step__label', 'Contributors').click();
         cy.get('.listPanel__itemTitle:visible:contains("Albert Hammond")')
@@ -143,7 +143,7 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
         cy.contains('button', 'Continue').click();
 
         cy.wait(2000);
-        cy.contains('The contributors with the "Translator" role must have their ORCID filled out')
+        cy.contains('The contributors with the "Translator" role must have their ORCID authenticated')
             .should('not.exist');
     });
     it('Submitter contributor must have ORCID filled', function () {
@@ -162,7 +162,7 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
 
         cy.contains('button', 'Continue').click();
         cy.contains('button', 'Continue').click();
-        cy.contains('The submitter contributor must have their ORCID filled out');
+        cy.contains('The submitter contributor must have their ORCID authenticated');
         
         cy.contains('.pkpSteps__step__label', 'Contributors').click();
         cy.get('.listPanel__itemTitle:visible:contains("Catherine Kwantes")')
@@ -177,7 +177,7 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
         cy.contains('button', 'Continue').click();
 
         cy.wait(2000);
-        cy.contains('The submitter contributor must have their ORCID filled out')
+        cy.contains('The submitter contributor must have their ORCID authenticated')
             .should('not.exist');
     });
     it('Clear ORCID of submitter user profile', function () {

@@ -202,8 +202,12 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         $submitter = $fieldsValidator->getSubmitterUser($submission->getId());
         if ($submitter) {
             $contributor = $fieldsValidator->getContributorForUser($submission, $submitter);
-            if ($contributor && empty($contributor->getData('orcid'))) {
-                $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.submitterOrcid');
+            if ($contributor) {
+                if (empty($contributor->getData('orcid'))) {
+                    $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.submitterOrcid');
+                }
+            } elseif (empty($submitter->getData('orcid'))) {
+                $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.submitterUserOrcid');
             }
         }
 
