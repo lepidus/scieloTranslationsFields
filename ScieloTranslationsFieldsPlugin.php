@@ -20,7 +20,7 @@ use APP\core\Application;
 use APP\pages\submission\SubmissionHandler;
 use APP\plugins\generic\scieloTranslationsFields\api\v1\translationsFields\TranslationsFieldsHandler;
 use APP\plugins\generic\scieloTranslationsFields\classes\components\forms\TranslationDataForm;
-use APP\plugins\generic\scieloTranslationsFields\classes\DoiValidator;
+use APP\plugins\generic\scieloTranslationsFields\classes\FieldsValidator;
 
 class ScieloTranslationsFieldsPlugin extends GenericPlugin
 {
@@ -177,15 +177,42 @@ class ScieloTranslationsFieldsPlugin extends GenericPlugin
         $submission = $params[1];
         $publication = $submission->getCurrentPublication();
 
+        $fieldsValidator = new FieldsValidator();
         $originalDocumentDoi = $publication->getData('originalDocumentDoi');
+
         if (empty($originalDocumentDoi)) {
             $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.required')];
-            return Hook::CONTINUE;
+        } elseif (!$fieldsValidator->validateDoi($originalDocumentDoi)) {
+            $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi')];
         }
 
-        $doiValidator = new DoiValidator();
-        if (!$doiValidator->validate($originalDocumentDoi)) {
-            $errors['originalDocumentDoi'] = [__('plugins.generic.scieloTranslationsFields.error.originalDocumentDoi.invalidDoi')];
+        $contextId = $submission->getData('contextId');
+        $translatorsUserGroup = $fieldsValidator->getTranslatorsUserGroup($contextId);
+        if (!is_null($translatorsUserGroup)) {
+            $submissionHasTranslator = $fieldsValidator->submissionHasTranslator($submission, $translatorsUserGroup->getId());
+            $contributorsErrors = $errors['contributors'] ?? [];
+
+            if (!$submissionHasTranslator) {
+                $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.oneTranslator');
+            } elseif (!$fieldsValidator->translatorsHaveOrcid($submission, $translatorsUserGroup->getId())) {
+                $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.translatorOrcid');
+            }
+        }
+
+        $submitter = $fieldsValidator->getSubmitterUser($submission->getId());
+        if ($submitter) {
+            $contributor = $fieldsValidator->getContributorForUser($submission, $submitter);
+            if ($contributor) {
+                if (empty($contributor->getData('orcid'))) {
+                    $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.submitterOrcid');
+                }
+            } elseif (empty($submitter->getData('orcid'))) {
+                $contributorsErrors[] = __('plugins.generic.scieloTranslationsFields.error.contributors.submitterUserOrcid');
+            }
+        }
+
+        if (!empty($contributorsErrors)) {
+            $errors['contributors'] = $contributorsErrors;
         }
 
         return Hook::CONTINUE;

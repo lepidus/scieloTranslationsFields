@@ -9,7 +9,7 @@ use PKP\security\authorization\RoleBasedHandlerOperationPolicy;
 use PKP\db\DAORegistry;
 use APP\facades\Repo;
 use APP\plugins\generic\scieloTranslationsFields\classes\clients\DoiClient;
-use APP\plugins\generic\scieloTranslationsFields\classes\DoiValidator;
+use APP\plugins\generic\scieloTranslationsFields\classes\FieldsValidator;
 
 class TranslationsFieldsHandler extends APIHandler
 {
@@ -51,8 +51,8 @@ class TranslationsFieldsHandler extends APIHandler
 
     private function validateOriginalDoi($originalDocumentDoi)
     {
-        $doiValidator = new DoiValidator();
-        return $doiValidator->validate($originalDocumentDoi);
+        $fieldsValidator = new FieldsValidator();
+        return $fieldsValidator->validateDoi($originalDocumentDoi);
     }
 
     public function saveTranslationFields($slimRequest, $response, $args)
