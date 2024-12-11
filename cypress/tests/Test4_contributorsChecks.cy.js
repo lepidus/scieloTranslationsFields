@@ -150,9 +150,18 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
         cy.login('ckwantes', null, 'publicknowledge');
         cy.findSubmission('myQueue', submissionData.title);
 
-        Cypress._.times(4, () => {
-            cy.contains('button', 'Continue').click();
-        });
+        cy.contains('button', 'Continue').click();
+        cy.contains('button', 'Continue').click();
+        cy.get('.listPanel__itemTitle:visible:contains("Catherine Kwantes")')
+            .parent().parent().within(() => {
+                cy.contains('button', 'Edit').click();
+            });
+        cy.get('input[name="orcid"]').clear();
+        cy.get('.modal__panel:contains("Edit")').find('button').contains('Save').click();
+        cy.waitJQuery();
+
+        cy.contains('button', 'Continue').click();
+        cy.contains('button', 'Continue').click();
         cy.contains('The submitter contributor must have their ORCID filled out');
         
         cy.contains('.pkpSteps__step__label', 'Contributors').click();
