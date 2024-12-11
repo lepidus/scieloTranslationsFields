@@ -6,9 +6,8 @@ use PKP\userGroup\UserGroup;
 use APP\submission\Submission;
 use APP\author\Author;
 use PKP\user\User;
-use PKP\security\Role;
-use PKP\db\DAORegistry;
 use APP\facades\Repo;
+use APP\plugins\generic\scieloTranslationsFields\classes\TranslationsFieldsDAO;
 
 class FieldsValidator
 {
@@ -72,15 +71,12 @@ class FieldsValidator
 
     public function getSubmitterUser(int $submissionId): ?User
     {
-        $stageAssignmentDao = DAORegistry::getDAO('StageAssignmentDAO');
-        $authorAssignments = $stageAssignmentDao->getBySubmissionAndRoleIds($submissionId, [Role::ROLE_ID_AUTHOR]);
-        $submitterAssignment = $authorAssignments->next();
+        $translationsFieldsDao = new TranslationsFieldsDAO();
+        $submitterId = $translationsFieldsDao->getSubmitterId($submissionId);
 
-        if (!$submitterAssignment) {
+        if (is_null($submitterId)) {
             return null;
         }
-
-        $submitterId = $submitterAssignment->getData('userId');
 
         return Repo::user()->get($submitterId);
     }
