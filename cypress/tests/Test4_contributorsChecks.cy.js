@@ -211,7 +211,7 @@ describe('SciELO Translations Fields - Contributors verifications', function () 
 		cy.get('input[name="orcid"]').clear().type(testOrcid, {delay: 0});
 		cy.get('.submitFormButton:visible').click();
 
-        cy.contains('.app__navItem', 'Submissions').click();
+        cy.contains('a', 'Back to Submissions').click();
         cy.findSubmission('myQueue', submissionData.title);
         Cypress._.times(4, () => {
             cy.contains('button', 'Continue').click();
